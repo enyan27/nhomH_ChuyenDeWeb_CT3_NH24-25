@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", require("./routes/authRoute"));
+app.use("/api/users", require("./routes/userRoute"));
 
 const PORT = process.env.PORT || 8080;
 
