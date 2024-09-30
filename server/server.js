@@ -3,9 +3,17 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const http = require("http");
+const socketIO = require("socket.io");
+const commentHandler = require("./socket_io/commentHandler");
+const userHandler = require("./socket_io/userHandler");
 
 const app = express();
 const server = http.createServer(app);
+const io = socketIO(server, {
+    cors: {
+        origin: process.env.URL_CLIENT,
+    },
+});
 
 /* Configuration */
 app.use(cors({ origin: [process.env.URL_CLIENT] }));
@@ -13,10 +21,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
+/* Main route */
 app.use("/api/auth", require("./routes/authRoute"));
 app.use("/api/users", require("./routes/userRoute"));
 app.use("/api/friends", require("./routes/friendRoute"));
 app.use("/api/posts", require("./routes/postRoute"));
+app.use("/api/comments", require("./routes/commentRoute"));
+
+/* Socket handler */
+io.on("connection", (socket) => {
+
+    userHandler(socket, io);
+    commentHandler(socket, io);
+
+    socket.on("disconnect", async (reason) => {
+        console.log("User disconnected because " + reason);
+    });
+});
 
 const PORT = process.env.PORT || 8080;
 
