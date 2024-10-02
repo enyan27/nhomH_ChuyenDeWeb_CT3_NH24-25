@@ -4,9 +4,10 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const http = require("http");
 const socketIO = require("socket.io");
-const commentHandler = require("./socket_io/commentHandler");
-const userHandler = require("./socket_io/userHandler");
 const chatsHandler = require("./socket_io/chatsHandler");
+const commentHandler = require("./socket_io/commentHandler");
+const notifyHandler = require("./socket_io/notifyHandler");
+const userHandler = require("./socket_io/userHandler");
 
 const app = express();
 const server = http.createServer(app);
@@ -29,6 +30,7 @@ app.use("/api/friends", require("./routes/friendRoute"));
 app.use("/api/posts", require("./routes/postRoute"));
 app.use("/api/comments", require("./routes/commentRoute"));
 app.use("/api/chats", require("./routes/chatRoute"));
+app.use("/api/notify", require("./routes/notifyRoute"));
 
 /* Socket handler */
 io.on("connection", (socket) => {
@@ -37,6 +39,8 @@ io.on("connection", (socket) => {
     chatsHandler(socket, io);
 
     commentHandler(socket, io);
+
+    notifyHandler(socket, io);
 
     socket.on("disconnect", async (reason) => {
         console.log("User disconnected because " + reason);
