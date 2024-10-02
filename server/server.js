@@ -6,6 +6,7 @@ const http = require("http");
 const socketIO = require("socket.io");
 const commentHandler = require("./socket_io/commentHandler");
 const userHandler = require("./socket_io/userHandler");
+const chatsHandler = require("./socket_io/chatsHandler");
 
 const app = express();
 const server = http.createServer(app);
@@ -27,11 +28,14 @@ app.use("/api/users", require("./routes/userRoute"));
 app.use("/api/friends", require("./routes/friendRoute"));
 app.use("/api/posts", require("./routes/postRoute"));
 app.use("/api/comments", require("./routes/commentRoute"));
+app.use("/api/chats", require("./routes/chatRoute"));
 
 /* Socket handler */
 io.on("connection", (socket) => {
-
     userHandler(socket, io);
+
+    chatsHandler(socket, io);
+
     commentHandler(socket, io);
 
     socket.on("disconnect", async (reason) => {
