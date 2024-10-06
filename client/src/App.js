@@ -1,8 +1,23 @@
+import React, { Suspense } from "react";
+import { Route, Routes } from "react-router-dom";
+import LoginPage from "views/LoginPage";
+import RegisterPage from "views/RegisterPage";
+import HomePage from "views/HomePage";
+import MainLayout from "layout/MainLayout";
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-4xl font-bold text-green-600">Hello, world!</h1>
-    </div>
+    <Suspense>
+      <Routes>
+        <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/register" element={<RegisterPage></RegisterPage>}></Route>
+        
+        <Route element={<MainLayout />}>
+          <Route path="/home" element={<HomePage></HomePage>}></Route>
+        </Route>
+        
+      </Routes>
+    </Suspense>
   );
 }
 
