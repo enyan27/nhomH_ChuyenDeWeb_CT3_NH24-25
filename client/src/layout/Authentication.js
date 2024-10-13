@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
+import { colorGradient } from "utils/constant";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";

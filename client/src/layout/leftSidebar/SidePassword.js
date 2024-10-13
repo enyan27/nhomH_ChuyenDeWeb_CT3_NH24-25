@@ -108,7 +108,7 @@ const SidePassword = () => {
       </FormGroup>
       <FormGroup>
         <Label name="confirmPassword" className="mb-1 text-[15px]">
-          Re-password*
+          New password*
         </Label>
         <Input
           name="confirmPassword"

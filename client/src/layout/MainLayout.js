@@ -1,5 +1,7 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { socket } from "api/config";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import SideNav from "./leftSidebar/SideNav";
 import SideUserInfo from "./leftSidebar/SideUserInfo";
 import useCheckLogin from "hooks/useCheckLogin";
 import SidePassword from "./leftSidebar/SidePassword";
@@ -12,7 +14,21 @@ const MainLayout = () => {
       <div className="relative flex items-start justify-between gap-x-8">
         <div className="sticky top-0 h-[100vh] flex-[1] flex flex-col justify-between z-[120] py-8">
           <div>
-            Navbar here
+            <Link
+              to={"/home"}
+              onClick={() =>
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                })
+              }
+              className="flex items-center gap-x-4"
+            >
+              <h3 className="text-2xl font-bold text-text2 dark:text-text4">
+                Logo
+              </h3>
+            </Link>
+            <SideNav></SideNav>
           </div>
           <div>
             <SideUserInfo
