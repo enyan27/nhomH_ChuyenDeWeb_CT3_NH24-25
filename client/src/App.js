@@ -10,6 +10,7 @@ import SavedPage from "views/SavedPage";
 import NotFoundPage from "views/NotFoundPage";
 import MainLayout from "layout/MainLayout";
 import CommingSoon from "views/CommingSoonPage";
+import ProfilePage from "views/ProfilePage";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
           <Route path="/home" element={<HomePage></HomePage>}></Route>
           <Route path="/post/:id" element={<PostDetailPage></PostDetailPage>}></Route>
           <Route path="/post-saved" element={<SavedPage></SavedPage>}></Route>
-          
+          <Route path="/profile/:id" element={<ProfilePage></ProfilePage>} ></Route>
           <Route path="/comming-soon" element={<CommingSoon></CommingSoon>}></Route>
         </Route>
 
