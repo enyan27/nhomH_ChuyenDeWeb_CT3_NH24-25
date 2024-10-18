@@ -1,12 +1,54 @@
-const express = require('express');
-const cors = require('cors');
+require("dotenv").config();
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const http = require("http");
+const socketIO = require("socket.io");
+const chatsHandler = require("./socket_io/chatsHandler");
+const commentHandler = require("./socket_io/commentHandler");
+const notifyHandler = require("./socket_io/notifyHandler");
+const userHandler = require("./socket_io/userHandler");
 
 const app = express();
-app.use(cors());
+const server = http.createServer(app);
+const io = socketIO(server, {
+    cors: {
+        origin: process.env.URL_CLIENT,
+    },
+});
+
+/* Configuration */
+app.use(cors({ origin: [process.env.URL_CLIENT] }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cookieParser());
+
+/* Main route */
+app.use("/api/auth", require("./routes/authRoute"));
+app.use("/api/users", require("./routes/userRoute"));
+app.use("/api/friends", require("./routes/friendRoute"));
+app.use("/api/posts", require("./routes/postRoute"));
+app.use("/api/comments", require("./routes/commentRoute"));
+app.use("/api/chats", require("./routes/chatRoute"));
+app.use("/api/notify", require("./routes/notifyRoute"));
+
+/* Socket handler */
+io.on("connection", (socket) => {
+    userHandler(socket, io);
+
+    chatsHandler(socket, io);
+
+    commentHandler(socket, io);
+
+    notifyHandler(socket, io);
+
+    socket.on("disconnect", async (reason) => {
+        console.log("User disconnected because " + reason);
+    });
+});
 
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
-    console.log("Listening on port " + PORT);
+server.listen(PORT, () => {
+    console.log('\x1b[34m%s\x1b[0m', "Listening on port " + PORT);
 });
