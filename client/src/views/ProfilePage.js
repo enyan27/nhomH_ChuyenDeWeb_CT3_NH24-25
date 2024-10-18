@@ -10,7 +10,9 @@ import TextHeading from "components/text/TextHeading";
 import TextLight from "components/text/TextLight";
 import ProfileTabList from "modules/profile/ProfileTabList";
 import PictureCover from "components/picture/PictureCover";
+import ProfilePicture from "modules/profile/tabs/ProfilePicture";
 import ProfilePost from "modules/profile/tabs/ProfilePost";
+import ProfileFriend from "modules/profile/tabs/ProfileFriend";
 import ProfileLike from "modules/profile/tabs/ProfileLike";
 import PictureAvatarBig from "components/picture/PictureAvatarBig";
 import Skeleton from "@mui/material/Skeleton";
@@ -116,8 +118,14 @@ const ProfileTabItem = ({ tabName, yourSelf, listUserFriend = [] }) => {
     case "posts":
       return <ProfilePost yourSelf={yourSelf}></ProfilePost>;
 
+    case "friends":
+      return <ProfileFriend listUserFriend={listUserFriend}></ProfileFriend>;
+
     case "likes":
       return <ProfileLike></ProfileLike>;
+
+    case "media":
+      return <ProfilePicture></ProfilePicture>;
   
     case "replies":
     case "highlights":
