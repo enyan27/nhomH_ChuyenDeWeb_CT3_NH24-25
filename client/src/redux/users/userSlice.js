@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userProfile } from "./userRequest";
+import { updateUserProfile, userFriend, userProfile } from "./userRequest";
 
 const initProfile = {
   loading: true,
@@ -58,6 +58,29 @@ const userSlice = createSlice({
       .addCase(userProfile.rejected, (state, { payload }) => {
         state.profile.loading = false;
         state.profile.error = payload;
+      });
+
+    // Friend list
+    builder
+      .addCase(userFriend.fulfilled, (state, { payload }) => {
+        state.friend.listUsers = payload;
+        state.friend.loading = false;
+      })
+      .addCase(userFriend.pending, (state) => {
+        state.friend.loading = true;
+        state.friend.error = false;
+      })
+      .addCase(userFriend.rejected, (state, { payload }) => {
+        state.friend.loading = false;
+        state.friend.error = payload;
+      });
+
+    builder
+      .addCase(updateUserProfile.fulfilled, (state) => {
+        state.profile.loading = false;
+      })
+      .addCase(updateUserProfile.pending, (state) => {
+        state.profile.loading = true;
       });
   },
 });

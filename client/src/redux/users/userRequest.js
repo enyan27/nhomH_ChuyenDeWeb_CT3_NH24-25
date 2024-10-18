@@ -15,7 +15,6 @@ export const userProfile = createAsyncThunk(
         },
       });
       let { userInfo, postCount, yourSelf } = res.data;
-
       return fulfillWithValue({
         userInfo: {
           ...userInfo,
@@ -23,6 +22,55 @@ export const userProfile = createAsyncThunk(
         },
         yourSelf: yourSelf,
       });
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+// export const userFriend = createAsyncThunk(
+//   "users/friend",
+//   async (
+//     { name, gender = "", status },
+//     { fulfillWithValue, rejectWithValue }
+//   ) => {
+//     try {
+//       const res = await axios.get(
+//         `/users?name=${name || ""}&gender=${gender}`,
+//         {
+//           headers: {
+//             authorization: "Bearer " + Cookies.get("tokens"),
+//           },
+//         }
+//       );
+//       let { listUser, listFriend } = res?.data;
+//       listUser = listUser.map((user) => verifyFriend(listFriend, user));
+//       if (status) listUser = listUser.filter((user) => user.status === status);
+//       return fulfillWithValue([
+//         ...listUser.filter((user) => user.status === 2),
+//         ...listUser.filter((user) => user.status !== 2),
+//       ]);
+//     } catch (error) {
+//       return rejectWithValue(error);
+//     }
+//   }
+// );
+
+export const userFriend = createAsyncThunk(
+  "users/friend",
+  async (
+    { name, gender = "" },
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await axios.get(
+        `/users?name=${name || ""}&gender=${gender}`,
+        {
+          headers: {
+            authorization: "Bearer " + Cookies.get("tokens"),
+          },
+        }
+      );
     } catch (error) {
       return rejectWithValue(error);
     }
