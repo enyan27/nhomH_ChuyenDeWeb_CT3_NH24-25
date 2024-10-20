@@ -5,6 +5,8 @@ import "swiper/scss/navigation";
 import LoginPage from "views/LoginPage";
 import RegisterPage from "views/RegisterPage";
 import HomePage from "views/HomePage";
+import FriendPage from "views/FriendPage";
+import FilterPage from "views/FilterPage";
 import PostDetailPage from "views/PostDetailPage";
 import SavedPage from "views/SavedPage";
 import NotFoundPage from "views/NotFoundPage";
@@ -21,7 +23,9 @@ function App() {
         
         <Route element={<MainLayout />}>
           <Route path="/home" element={<HomePage></HomePage>}></Route>
+          <Route path="/friends" element={<FriendPage></FriendPage>}></Route>
           <Route path="/post/:id" element={<PostDetailPage></PostDetailPage>}></Route>
+          <Route path="/search" element={<FilterPage></FilterPage>}></Route>
           <Route path="/post-saved" element={<SavedPage></SavedPage>}></Route>
           <Route path="/profile/:id" element={<ProfilePage></ProfilePage>} ></Route>
           <Route path="/comming-soon" element={<CommingSoon></CommingSoon>}></Route>

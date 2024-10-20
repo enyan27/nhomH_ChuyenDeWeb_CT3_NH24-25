@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import HomeIcon from "@mui/icons-material/Home";
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import { NavLink } from "react-router-dom";
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { NavLink, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { socket } from "api/config";
+import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import SearchIcon from '@mui/icons-material/Search';
+import PublicIcon from '@mui/icons-material/Public';
 
 const listNav = [
   {
@@ -11,9 +23,24 @@ const listNav = [
     icon: <HomeIcon></HomeIcon>,
   },
   {
+    name: "Friends",
+    url: "/friends",
+    icon: <PeopleOutlineIcon></PeopleOutlineIcon>,
+  },
+  {
     name: "Bookmarks",
     url: "/post-saved",
     icon: <BookmarkBorderIcon></BookmarkBorderIcon>,
+  },
+  {
+    name: "Notifications",
+    url: "/notify",
+    icon: <NotificationsNoneIcon></NotificationsNoneIcon>,
+  },
+  {
+    name: "Messages",
+    url: "/chats",
+    icon: <ChatBubbleOutlineIcon ></ChatBubbleOutlineIcon>,
   },
   {
     name: "More",

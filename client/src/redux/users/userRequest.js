@@ -2,7 +2,7 @@ import axios from "api/config";
 import Cookies from "js-cookie";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-
+import verifyFriend from "utils/verifyFriend";
 import { loginRefresh } from "redux/auth/authSlice";
 
 export const userProfile = createAsyncThunk(
@@ -14,7 +14,8 @@ export const userProfile = createAsyncThunk(
           authorization: "Bearer " + Cookies.get("tokens"),
         },
       });
-      let { userInfo, postCount, yourSelf } = res.data;
+      let { userInfo, postCount, yourSelf, listFriend } = res.data;
+      if (!yourSelf) userInfo = verifyFriend(listFriend, userInfo);
       return fulfillWithValue({
         userInfo: {
           ...userInfo,
@@ -28,39 +29,11 @@ export const userProfile = createAsyncThunk(
   }
 );
 
-// export const userFriend = createAsyncThunk(
-//   "users/friend",
-//   async (
-//     { name, gender = "", status },
-//     { fulfillWithValue, rejectWithValue }
-//   ) => {
-//     try {
-//       const res = await axios.get(
-//         `/users?name=${name || ""}&gender=${gender}`,
-//         {
-//           headers: {
-//             authorization: "Bearer " + Cookies.get("tokens"),
-//           },
-//         }
-//       );
-//       let { listUser, listFriend } = res?.data;
-//       listUser = listUser.map((user) => verifyFriend(listFriend, user));
-//       if (status) listUser = listUser.filter((user) => user.status === status);
-//       return fulfillWithValue([
-//         ...listUser.filter((user) => user.status === 2),
-//         ...listUser.filter((user) => user.status !== 2),
-//       ]);
-//     } catch (error) {
-//       return rejectWithValue(error);
-//     }
-//   }
-// );
-
 export const userFriend = createAsyncThunk(
   "users/friend",
   async (
-    { name, gender = "" },
-    { rejectWithValue }
+    { name, gender = "", status },
+    { fulfillWithValue, rejectWithValue }
   ) => {
     try {
       const res = await axios.get(
@@ -71,6 +44,13 @@ export const userFriend = createAsyncThunk(
           },
         }
       );
+      let { listUser, listFriend } = res?.data;
+      listUser = listUser.map((user) => verifyFriend(listFriend, user));
+      if (status) listUser = listUser.filter((user) => user.status === status);
+      return fulfillWithValue([
+        ...listUser.filter((user) => user.status === 2),
+        ...listUser.filter((user) => user.status !== 2),
+      ]);
     } catch (error) {
       return rejectWithValue(error);
     }

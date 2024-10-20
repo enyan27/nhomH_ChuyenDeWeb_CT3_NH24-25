@@ -1,13 +1,24 @@
 import React, { useEffect } from "react";
 import { socket } from "api/config";
 import { Link, Outlet, useLocation } from "react-router-dom";
+// import { useDispatch } from "react-redux";
 import SideNav from "./leftSidebar/SideNav";
 import SideUserInfo from "./leftSidebar/SideUserInfo";
+import SideContact from "./rightSidebar/SideContact";
+import SideFilter from "./rightSidebar/SideFilter";
+import SideFriend from "./rightSidebar/SideFriend";
 import useCheckLogin from "hooks/useCheckLogin";
+
+import SideSearchInput from "./rightSidebar/SideSearchInput";
 import SidePassword from "./leftSidebar/SidePassword";
+import { toast } from "react-toastify";
+import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 
 const MainLayout = () => {
   const { currentUser } = useCheckLogin();
+  const location = useLocation();
+  // const dispatch = useDispatch();
 
   return (
     <div className="max-w-[1200px] mx-auto">
@@ -48,12 +59,26 @@ const MainLayout = () => {
           <Outlet></Outlet>
         </div>
 
-        <div className="sticky top-0 flex-[1.5] z-40 overflow-auto h-[100vh] py-4 scroll-custom mt-5">
-          Search here
+        <div className="sticky top-0 flex-[1.5] z-40 overflow-auto h-[100vh] py-4 scroll-custom">
+          <SideSearchInput />
+          <RightContainer path={location.pathname} />
         </div>
       </div>
     </div>
   );
+};
+
+const RightContainer = ({ path }) => {
+  switch (path) {
+    case "/friends":
+      return <SideFriend></SideFriend>;
+
+    case "/search":
+      return <SideFilter></SideFilter>;
+
+    default:
+      return <SideContact></SideContact>;
+  }
 };
 
 export default MainLayout;
