@@ -3,6 +3,7 @@ import authReducer from "./auth/authSlice";
 import userReducer from "./users/userSlice";
 import postReducer from "./posts/postSlice";
 import commentSlice from "./comments/commentSlice";
+import chatSlice from "./chats/chatSlice";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -10,5 +11,6 @@ export const store = configureStore({
     posts: postReducer,
     comments: commentSlice,
     users: userReducer,
+    chats: chatSlice,
   }),
 });
