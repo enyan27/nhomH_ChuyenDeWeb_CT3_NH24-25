@@ -13,6 +13,8 @@ import NotFoundPage from "views/NotFoundPage";
 import MainLayout from "layout/MainLayout";
 import CommingSoon from "views/CommingSoonPage";
 import ProfilePage from "views/ProfilePage";
+import ChatPage from "views/ChatPage";
+import MessagePage from "views/MessagePage";
 
 function App() {
   return (
@@ -28,6 +30,9 @@ function App() {
           <Route path="/search" element={<FilterPage></FilterPage>}></Route>
           <Route path="/post-saved" element={<SavedPage></SavedPage>}></Route>
           <Route path="/profile/:id" element={<ProfilePage></ProfilePage>} ></Route>
+          <Route path="/chats" element={<ChatPage />}></Route>
+          <Route path="/chats/t/:id" element={<MessagePage />}></Route>
+          
           <Route path="/comming-soon" element={<CommingSoon></CommingSoon>}></Route>
         </Route>
 
