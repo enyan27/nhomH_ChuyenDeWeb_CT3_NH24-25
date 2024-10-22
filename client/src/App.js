@@ -16,6 +16,8 @@ import MessagePage from "views/MessagePage";
 import NotFoundPage from "views/NotFoundPage";
 import CommingSoon from "views/CommingSoonPage";
 import FilterPage from "views/FilterPage";
+import MusicPage from "views/MusicPage";
+
 function App() {
   return (
     <Suspense>
@@ -31,6 +33,7 @@ function App() {
           <Route path="/post/:id" element={<PostDetailPage />} />
           <Route path="/post-saved" element={<SavedPage />} />
           <Route path="/chats" element={<ChatPage />} />
+          <Route path="/music" element={<MusicPage />} />
           <Route path="/chats/t/:id" element={<MessagePage />} />
           <Route path="/search" element={<FilterPage></FilterPage>}></Route>
           <Route path="/comming-soon" element={<CommingSoon />} />
