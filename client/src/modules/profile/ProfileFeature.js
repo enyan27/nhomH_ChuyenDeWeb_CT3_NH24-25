@@ -3,6 +3,8 @@ import useToggle from "hooks/useToggle";
 import { Button, IconButton, Snackbar, Tooltip } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 import SendIcon from "@mui/icons-material/Send";
+import ProfileEdit from "./ProfileEdit";
+import FriendStatus from "modules/friends/FriendStatus";
 import { useNavigate, useParams } from "react-router-dom";
 import useSnackbarInfo from "hooks/useSnackbarInfo";
 
@@ -15,6 +17,12 @@ const ProfileFeature = ({ yourSelf, status = 3, isSender = true, chatID }) => {
   const [open, setOpen] = stateOpen;
   return (
     <>
+      {showEdit && (
+        <ProfileEdit
+          handleHideModal={setShowEdit}
+          setOpenSnackbar={setOpen}
+        ></ProfileEdit>
+      )}
       <div className="flex items-center justify-end py-3 gap-x-3">
         <Tooltip title="Copy link to profile">
           <IconButton
@@ -53,6 +61,12 @@ const ProfileFeature = ({ yourSelf, status = 3, isSender = true, chatID }) => {
                 </IconButton>
               </Tooltip>
             )}
+            <FriendStatus
+              isSender={isSender}
+              status={status}
+              userID={id}
+              className={classGeneral}
+            ></FriendStatus>
           </>
         )}
       </div>

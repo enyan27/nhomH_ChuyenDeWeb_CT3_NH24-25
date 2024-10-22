@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "api/config";
+import axios, { socket } from "api/config";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import convertLineBreak from "utils/convertLineBreak";
@@ -52,6 +52,7 @@ export const addNewPost = createAsyncThunk(
         progress: undefined,
         theme: "colored",
       });
+      socket.emit("send-notify-post", { ...data, newPost: res?.data });
       return 1;
     } catch (error) {
       toast.error("Failed. Please try again!", {
