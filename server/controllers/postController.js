@@ -158,7 +158,6 @@ const handleCreatePost = asyncHandler(async (req, res) => {
         authorID: username._id,
         theme: req.body.theme || { linkImg: null },
       });
-      res.json(newPost);
     } else if (type === "image") {
       const files = req.files.publicImg;
       var listImg = [];
@@ -180,7 +179,6 @@ const handleCreatePost = asyncHandler(async (req, res) => {
         authorID: username._id,
         listImg,
       });
-      res.json(newPost);
     } else if (type === "video") {
       const file = req.files.videoUpload[0];
       const data = await cloudinary.upload(file.path, {
@@ -194,6 +192,14 @@ const handleCreatePost = asyncHandler(async (req, res) => {
       });
       res.json(newPost);
     } else res.status(400).json("Invalid post type");
+    // Fix - Get new post
+    const postWithAuthorInfo = await PostModel.findById(newPost._id).populate("authorID", [
+      "_id",
+      "firstName",
+      "lastName",
+      "avatar",
+    ]);
+    res.json(postWithAuthorInfo);
   } catch (error) {
     res.status(500).json({ error, mess: "Error server" });
   }

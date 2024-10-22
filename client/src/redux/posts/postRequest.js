@@ -53,7 +53,7 @@ export const addNewPost = createAsyncThunk(
         theme: "colored",
       });
       socket.emit("send-notify-post", { ...data, newPost: res?.data });
-      return 1;
+      return res.data;  // Trả về bài viết mới
     } catch (error) {
       toast.error("Failed. Please try again!", {
         position: "top-right",

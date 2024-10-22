@@ -13,12 +13,12 @@ module.exports = {
         thirdColor: "#000",
         heartColor: "#808080",
 
-        darkLite: "#000",
+        darkLite: "#000", // bg all
         darkSecondary: "#1C1C24",
-        darkSoft: "#202327",
-        darkSoft2: "#202327",
+        darkSoft: "#202327", // bg post
+        darkSoft2: "#202327", // search
         darkRed: "#422C32",
-        iconColor: "#A2A2A8",
+        iconColor: "#A2A2A8", // icon
         whiteSoft: "#EFF1F1",
         whiteSoft2: "#EFF3F4",
         graySoft: "#E7E7E8",
