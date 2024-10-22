@@ -86,6 +86,7 @@ const MainLayout = () => {
             <SideNav></SideNav>
           </div>
           <div>
+
             <SideUserInfo
               avatar={currentUser?.avatar}
               username={
