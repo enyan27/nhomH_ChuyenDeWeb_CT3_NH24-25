@@ -7,14 +7,15 @@ import RegisterPage from "views/RegisterPage";
 import HomePage from "views/HomePage";
 import FriendPage from "views/FriendPage";
 import FilterPage from "views/FilterPage";
+import ProfilePage from "views/ProfilePage";
 import PostDetailPage from "views/PostDetailPage";
+import ChatPage from "views/ChatPage";
 import SavedPage from "views/SavedPage";
+import NotifyPage from "views/NotifyPage";
+import MessagePage from "views/MessagePage";
 import NotFoundPage from "views/NotFoundPage";
 import MainLayout from "layout/MainLayout";
 import CommingSoon from "views/CommingSoonPage";
-import ProfilePage from "views/ProfilePage";
-import ChatPage from "views/ChatPage";
-import MessagePage from "views/MessagePage";
 
 function App() {
   return (
@@ -26,13 +27,19 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/home" element={<HomePage></HomePage>}></Route>
           <Route path="/friends" element={<FriendPage></FriendPage>}></Route>
-          <Route path="/post/:id" element={<PostDetailPage></PostDetailPage>}></Route>
+          <Route path="/notify" element={<NotifyPage />}></Route>
+          <Route
+            path="/profile/:id"
+            element={<ProfilePage></ProfilePage>}
+          ></Route>
+          <Route
+            path="/post/:id"
+            element={<PostDetailPage></PostDetailPage>}
+          ></Route>
           <Route path="/search" element={<FilterPage></FilterPage>}></Route>
           <Route path="/post-saved" element={<SavedPage></SavedPage>}></Route>
-          <Route path="/profile/:id" element={<ProfilePage></ProfilePage>} ></Route>
           <Route path="/chats" element={<ChatPage />}></Route>
           <Route path="/chats/t/:id" element={<MessagePage />}></Route>
-          
           <Route path="/comming-soon" element={<CommingSoon></CommingSoon>}></Route>
         </Route>
 
