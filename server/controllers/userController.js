@@ -25,36 +25,55 @@ let monthNames = [
   "December",
 ];
 
-function searchListByName(str, name) {
-  return removeTones(str.toLowerCase()).includes(
-    removeTones(name.toLowerCase())
-  );
-}
-
 const getUserList = asyncHandler(async (req, res) => {
   const username = req.username;
   try {
-    const { gender, name } = req.query;
+    const { gender, name } = req.query;  // Lấy thông tin từ query
     const filterQuery = (key, query) => query && { [key]: query };
+
+    // Lấy danh sách người dùng ngoại trừ email hiện tại
     let listUser = await UserModel.find(
       {
         email: { $ne: username.email },
-        ...filterQuery("gender", gender),
+        ...filterQuery("gender", gender),  // Lọc theo giới tính nếu có
       },
-      { password: 0 }
+      { password: 0 }  // Bỏ password khỏi kết quả
     );
-    if (name)
-      listUser = listUser.filter(
-        (user) =>
-          searchListByName(user.firstName, name) ||
-          searchListByName(user.lastName, name)
-      );
-    const listFriend = await getAllFriend(username);
+
+    // Nếu có từ khóa "name", lọc danh sách theo firstName, lastName hoặc email
+    if (name) {
+      const nameWithoutTones = removeTones(name.toLowerCase()); // Loại bỏ dấu từ từ khóa tìm kiếm
+
+      // Kiểm tra nếu từ khóa tìm kiếm có chứa ký tự "@"
+      const containsAtSymbol = name.includes('@');
+
+      listUser = listUser.filter(user => {
+        const fullName = `${user.firstName} ${user.lastName}`;
+        const userEmailWithoutTones = removeTones(user.email.toLowerCase());
+
+        // Nếu từ khóa tìm kiếm có chứa "@" thì chỉ tìm kiếm trong email
+        if (containsAtSymbol) {
+          return userEmailWithoutTones.includes(nameWithoutTones);  // Tìm kiếm trong email
+        }
+
+        // Nếu không có "@" thì tìm kiếm trong tên
+        return (
+          removeTones(fullName.toLowerCase()).includes(nameWithoutTones) ||  // Tìm kiếm trong fullName
+          removeTones(user.firstName.toLowerCase()).includes(nameWithoutTones) ||  // Tìm kiếm trong firstName
+          removeTones(user.lastName.toLowerCase()).includes(nameWithoutTones)    // Tìm kiếm trong lastName
+        );
+      });
+    }
+
+    const listFriend = await getAllFriend(username);  // Lấy danh sách bạn bè
+
+    // Trả về danh sách người dùng đã xáo trộn và danh sách bạn bè
     res.json({ listUser: shuffleArray(listUser), listFriend });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error);  // Xử lý lỗi nếu có
   }
 });
+
 
 const getUserDetail = asyncHandler(async (req, res) => {
   const username = req.username;
