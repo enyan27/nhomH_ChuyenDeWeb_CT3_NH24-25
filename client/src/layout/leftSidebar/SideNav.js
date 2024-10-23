@@ -4,6 +4,8 @@ import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+
 import { NavLink, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { notifyList } from "redux/notify/notifyRequest";
@@ -43,6 +45,12 @@ const listNav = [
     url: "/chats",
     icon: <ChatBubbleOutlineIcon ></ChatBubbleOutlineIcon>,
   },
+  {
+    name: "Music",
+    url: "/music",
+    icon: <LibraryMusicIcon></LibraryMusicIcon>,
+  },
+  
   {
     name: "More",
     url: "/comming-soon",
