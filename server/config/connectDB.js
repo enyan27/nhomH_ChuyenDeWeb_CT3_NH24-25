@@ -5,10 +5,14 @@ mongoose
 <<<<<<< HEAD
   .connect(`mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@twitter.vz9ss.mongodb.net/twitter-db`, {
   // .connect("mongodb://localhost:27017/twitter-db", {
+<<<<<<< HEAD
 =======
    .connect(`mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@twitter.vz9ss.mongodb.net/twitter-db`, {
  // .connect("mongodb://localhost:27017/twitter-db", {
 >>>>>>> 2-auth/login,logout,register
+=======
+
+>>>>>>> origin/main
     useNewUrlParser: true, 
     useUnifiedTopology: true 
   })
