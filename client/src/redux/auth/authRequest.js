@@ -67,3 +67,39 @@ export const logoutUser = async (dispatch) => {
     console.log(error);
   }
 };
+
+// Gửi email chứa mã xác nhận
+export const sendResetEmail = ({ email, captchaToken }) => async (dispatch) => {
+  try {
+    const response = await axios.post("/auth/send-reset-email", { email, captchaToken });
+    dispatch({ type: "SEND_RESET_EMAIL_SUCCESS", payload: response.data });
+    return response.data;
+  } catch (error) {
+    dispatch({ type: "SEND_RESET_EMAIL_FAILURE", payload: error.response.data });
+    throw error;
+  }
+};
+
+// Xác minh mã xác nhận
+export const verifyResetCode = ({ email, code }) => async (dispatch) => {
+  try {
+    const response = await axios.post("/auth/verify-reset-code", { email, code });
+    dispatch({ type: "VERIFY_RESET_CODE_SUCCESS", payload: response.data });
+    return response.data;
+  } catch (error) {
+    dispatch({ type: "VERIFY_RESET_CODE_FAILURE", payload: error.response.data });
+    throw error;
+  }
+};
+
+// Đặt lại mật khẩu mới
+export const resetPassword = ({ email, password }) => async (dispatch) => {
+  try {
+    const response = await axios.post("/auth/reset-password", { email, password });
+    dispatch({ type: "RESET_PASSWORD_SUCCESS", payload: response.data });
+    return response.data;
+  } catch (error) {
+    dispatch({ type: "RESET_PASSWORD_FAILURE", payload: error.response.data });
+    throw error;
+  }
+};
