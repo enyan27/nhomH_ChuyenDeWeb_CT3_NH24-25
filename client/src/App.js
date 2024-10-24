@@ -16,12 +16,14 @@ import MessagePage from "views/MessagePage";
 import NotFoundPage from "views/NotFoundPage";
 import CommingSoon from "views/CommingSoonPage";
 import FilterPage from "views/FilterPage";
+import ForgotPasswordPage from "views/ForgotPasswordPage";
 function App() {
   return (
     <Suspense>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         
         <Route element={<MainLayout />}>
           <Route path="/home" element={<HomePage />} />
@@ -34,6 +36,7 @@ function App() {
           <Route path="/chats/t/:id" element={<MessagePage />} />
           <Route path="/search" element={<FilterPage></FilterPage>}></Route>
           <Route path="/comming-soon" element={<CommingSoon />} />
+
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
