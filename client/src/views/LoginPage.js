@@ -81,6 +81,11 @@ const LoginPage = () => {
             </ErrorMessage>
           )}
         </FormGroup>
+        <p className="mt-4 text-sm font-normal">
+          <Link to="/forgot-password" className="font-medium text-primary">
+            Forgot password?
+          </Link>
+        </p>
         <div className="mt-8 text-center">
           <ButtonGradient
             className="w-[60%] py-[14px] text-[22px] leading-9 font-semibold rounded-xl"
@@ -96,6 +101,8 @@ const LoginPage = () => {
               Sign up
             </Link>
           </p>
+
+
         </div>
       </form>
     </Authentication>

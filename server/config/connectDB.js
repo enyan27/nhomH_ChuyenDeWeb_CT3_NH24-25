@@ -2,8 +2,13 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
 mongoose
+<<<<<<< HEAD
   .connect(`mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@twitter.vz9ss.mongodb.net/twitter-db`, {
   // .connect("mongodb://localhost:27017/twitter-db", {
+=======
+   .connect(`mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@twitter.vz9ss.mongodb.net/twitter-db`, {
+ // .connect("mongodb://localhost:27017/twitter-db", {
+>>>>>>> 2-auth/login,logout,register
     useNewUrlParser: true, 
     useUnifiedTopology: true 
   })

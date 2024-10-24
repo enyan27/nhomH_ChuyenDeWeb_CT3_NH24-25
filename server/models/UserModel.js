@@ -10,6 +10,8 @@ const UserSchema = mongoose.Schema(
       type: String,
       enum: ["male", "female"],
     },
+    resetCode: { type: String }, // Mã xác nhận
+    resetCodeExpires: { type: Number }, // Thời gian hết hạn mã
     avatar: String,
     coverImg: {
       type: String,
