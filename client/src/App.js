@@ -16,7 +16,6 @@ import MessagePage from "views/MessagePage";
 import NotFoundPage from "views/NotFoundPage";
 import CommingSoon from "views/CommingSoonPage";
 import FilterPage from "views/FilterPage";
-import MainLayout from "layout/MainLayout";
 import ForgotPasswordPage from "views/ForgotPasswordPage";
 
 
