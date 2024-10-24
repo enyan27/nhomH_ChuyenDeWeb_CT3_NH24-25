@@ -6,7 +6,6 @@ import MainLayout from "layout/MainLayout";
 import LoginPage from "views/LoginPage";
 import RegisterPage from "views/RegisterPage";
 import HomePage from "views/HomePage";
-<<<<<<< HEAD
 import FriendPage from "views/FriendPage";
 import ProfilePage from "views/ProfilePage";
 import PostDetailPage from "views/PostDetailPage";
@@ -17,29 +16,17 @@ import MessagePage from "views/MessagePage";
 import NotFoundPage from "views/NotFoundPage";
 import CommingSoon from "views/CommingSoonPage";
 import FilterPage from "views/FilterPage";
-<<<<<<< HEAD
-=======
 import MainLayout from "layout/MainLayout";
 import ForgotPasswordPage from "views/ForgotPasswordPage";
 
->>>>>>> 2-auth/login,logout,register
-=======
-import ForgotPasswordPage from "views/ForgotPasswordPage";
->>>>>>> origin/main
+
 function App() {
   return (
     <Suspense>
       <Routes>
-<<<<<<< HEAD
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        
-=======
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/register" element={<RegisterPage></RegisterPage>}></Route>
         <Route path="/forgot-password" element={<ForgotPasswordPage></ForgotPasswordPage>}></Route>
->>>>>>> 2-auth/login,logout,register
         <Route element={<MainLayout />}>
           <Route path="/home" element={<HomePage />} />
           <Route path="/friends" element={<FriendPage />} />
