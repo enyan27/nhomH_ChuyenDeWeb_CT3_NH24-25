@@ -16,12 +16,9 @@ import MessagePage from "views/MessagePage";
 import NotFoundPage from "views/NotFoundPage";
 import CommingSoon from "views/CommingSoonPage";
 import FilterPage from "views/FilterPage";
-<<<<<<< HEAD
 import ForgotPasswordPage from "views/ForgotPasswordPage";
-
-=======
 import MusicPage from "views/MusicPage";
->>>>>>> 8-music
+
 
 function App() {
   return (
