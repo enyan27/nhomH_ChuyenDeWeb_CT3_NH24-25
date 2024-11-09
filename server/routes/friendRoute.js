@@ -1,13 +1,10 @@
 const router = require("express").Router();
 const {
-  getUserFriend,
   handleAddFriend,
   handleAcceptFriend,
   handleCancelFriend,
 } = require("../controllers/friendController");
 const verifyToken = require("../middleWare/verifyToken");
-
-// router.get("/", verifyToken, getUserFriend);
 
 router.post("/add/:id", verifyToken, handleAddFriend);
 

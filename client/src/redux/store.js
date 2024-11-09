@@ -15,6 +15,4 @@ export const store = configureStore({
     notify: notifySlice,
     chats: chatSlice,
   }),
-  // middleware: (getDefaultMiddleware) =>
-  //   getDefaultMiddleware(),
 });

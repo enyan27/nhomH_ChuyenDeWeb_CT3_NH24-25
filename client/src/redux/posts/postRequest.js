@@ -10,6 +10,7 @@ export const addNewPost = createAsyncThunk(
     try {
       var formData = new FormData();
       const { type, content } = data;
+
       if (type === "image") {
         const { publicImg } = data;
         formData.append("content", convertLineBreak(content));
@@ -20,6 +21,7 @@ export const addNewPost = createAsyncThunk(
       } else if (type === "video") {
         for (const key in data) formData.append(key, data[key]);
       }
+
       const res = await axios({
         method: "POST",
         url: "/posts/public",
@@ -32,16 +34,19 @@ export const addNewPost = createAsyncThunk(
           authorization: "Bearer " + Cookies.get("tokens"),
         },
       });
+
       reset({
         content: "",
         theme: "",
         publicImg: null,
         videoUpload: null,
       });
+
       const audio = new Audio(
         "/audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3"
       );
       audio.play();
+      
       toast.success("Create successfully post", {
         position: "top-right",
         autoClose: 3000,

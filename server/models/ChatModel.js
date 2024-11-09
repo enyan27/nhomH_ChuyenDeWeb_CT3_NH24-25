@@ -8,10 +8,6 @@ const ChatSchema = mongoose.Schema(
         ref: "users",
       },
     ],
-    // groupID: {
-    //   type: String,
-    //   ref: "groups",
-    // },
     latestMessage: {
       type: String,
       ref: "messages",
