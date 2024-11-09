@@ -4,7 +4,7 @@ import EmptyLayout from "layout/EmptyLayout";
 
 const CommingSoon = () => {
   useEffect(() => {
-    document.title = "Twitter | Comming Soon";
+    document.title = "Comming Soon | Twitter";
   }, []);
   return (
     <>

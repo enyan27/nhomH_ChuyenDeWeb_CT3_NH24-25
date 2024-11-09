@@ -32,10 +32,14 @@ const postSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(addNewPost.fulfilled, (state) => {
+      .addCase(addNewPost.fulfilled, (state, { payload }) => {
         state.createPost.success = true;
         state.createPost.loading = false;
+        // Fix - Get new post
+        // Thêm bài viết mới vào đầu danh sách
+        state.getPost.listPost = [payload, ...state.getPost.listPost]; 
       })
+
       .addCase(addNewPost.pending, (state) => {
         state.createPost.loading = true;
         state.createPost.error = false;

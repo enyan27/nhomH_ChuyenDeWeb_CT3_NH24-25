@@ -32,7 +32,10 @@ export const addNewComment = createAsyncThunk(
           },
         }
       );
+      const { authorID, userID } = res.data;
       socket.emit("sendComment", { ...res?.data });
+      authorID !== userID._id &&
+        socket.emit("send-notify-comment", { ...res?.data, postID, content });
       return true;
     } catch (error) {
       return rejectWithValue(error);

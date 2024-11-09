@@ -3,29 +3,6 @@ const ChatModel = require("../models/ChatModel");
 const FriendModel = require("../models/FriendModel");
 const UserModel = require("../models/UserModel");
 
-// const getUserFriend = asyncHandler(async (req, res) => {
-//   const username = req.username;
-//   try {
-//     const listFriend = await FriendModel.find({
-//       $or: [
-//         {
-//           from: username._id,
-//         },
-//         { to: username._id },
-//       ],
-//     }).populate(["from", "to"]);
-//     var listUser = [];
-//     listFriend.map((item) => {
-//       if (item.from.email === username.email) listUser = [...listUser, item.to];
-//       else listUser = [...listUser, item.from];
-//     });
-//     const listAllFriend = await getAllFriend(username);
-//     res.json({ listAllFriend });
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// });
-
 async function checkExisted(yourID, userID) {
   return await FriendModel.findOne({
     $or: [
@@ -103,7 +80,6 @@ const handleCancelFriend = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  // getUserFriend,
   handleAddFriend,
   handleAcceptFriend,
   handleCancelFriend,

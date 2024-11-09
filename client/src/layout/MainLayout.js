@@ -1,13 +1,68 @@
 import React, { useEffect } from "react";
 import { socket } from "api/config";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import SideNav from "./leftSidebar/SideNav";
 import SideUserInfo from "./leftSidebar/SideUserInfo";
+import SideContact from "./rightSidebar/SideContact";
+import SideFilter from "./rightSidebar/SideFilter";
+import SideFriend from "./rightSidebar/SideFriend";
 import useCheckLogin from "hooks/useCheckLogin";
+import { addUserActive } from "redux/chats/chatSlice";
+import SideSearchInput from "./rightSidebar/SideSearchInput";
 import SidePassword from "./leftSidebar/SidePassword";
+import { toast } from "react-toastify";
+import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 
 const MainLayout = () => {
   const { currentUser } = useCheckLogin();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    socket.connect();
+
+    socket.on("receive-notify-message", (userID) => {
+      const decodedToken = jwtDecode(Cookies.get("tokens"));
+      if (userID === decodedToken?._id) {
+        const audio = new Audio("/audio/new-message.mp3");
+        audio.play();
+        if (!location.pathname.includes("/chats")) {
+          toast.info("You have a new message", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      }
+    });
+
+    socket.on("user-active", (data) => {
+      dispatch(addUserActive(data));
+    });
+
+    return () => {
+      socket.disconnect();
+      socket.off();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (currentUser) {
+      setInterval(() => {
+        socket.emit("client-connect", currentUser);
+      }, 5000);
+      window.addEventListener("beforeunload", () => {
+        socket.emit("client-disconnect", currentUser);
+      });
+    }
+  }, [currentUser]);
 
   return (
     <div className="max-w-[1200px] mx-auto">
@@ -31,6 +86,7 @@ const MainLayout = () => {
             <SideNav></SideNav>
           </div>
           <div>
+
             <SideUserInfo
               avatar={currentUser?.avatar}
               username={
@@ -48,12 +104,26 @@ const MainLayout = () => {
           <Outlet></Outlet>
         </div>
 
-        <div className="sticky top-0 flex-[1.5] z-40 overflow-auto h-[100vh] py-4 scroll-custom mt-5">
-          Search here
+        <div className="sticky top-0 flex-[1.5] z-40 overflow-auto h-[100vh] py-4 scroll-custom">
+          <SideSearchInput />
+          <RightContainer path={location.pathname} />
         </div>
       </div>
     </div>
   );
+};
+
+const RightContainer = ({ path }) => {
+  switch (path) {
+    case "/friends":
+      return <SideFriend></SideFriend>;
+
+    case "/search":
+      return <SideFilter></SideFilter>;
+
+    default:
+      return <SideContact></SideContact>;
+  }
 };
 
 export default MainLayout;
