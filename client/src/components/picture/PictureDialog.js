@@ -8,6 +8,7 @@ const PictureDialog = ({ position, openState, pictureState }) => {
   const [openBackdrop, setOpenBackdrop] = openState;
   const [pictures, setPictures] = pictureState;
   const listImg = pictures;
+
   const handleClickBackdrop = (e) => {
     const classNameElement = e.target.className;
     if (
@@ -21,6 +22,7 @@ const PictureDialog = ({ position, openState, pictureState }) => {
       setPictures();
     }
   };
+
   return (
     <Backdrop
       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -54,6 +56,7 @@ const PictureDialog = ({ position, openState, pictureState }) => {
 };
 
 PictureDialog.propTypes = {
+  position: PropTypes.number,
   openState: PropTypes.any,
   pictureState: PropTypes.any,
 };

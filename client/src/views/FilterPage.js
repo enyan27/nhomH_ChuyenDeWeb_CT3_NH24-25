@@ -92,9 +92,10 @@ const FilterPage = () => {
               {(loadUser || listUsers.length > 0) && (
                 <TextHeading className="mb-3">People</TextHeading>
               )}
+              {/* Fix UI - Friend list */}
               <div
                 className={`grid ${
-                  loadUser || listUsers.length > 0 ? "grid-cols-2" : ""
+                  loadUser || listUsers.length > 0 ? "grid-cols-1" : ""
                 } gap-x-5 gap-y-4`}
               >
                 {!loadUser ? users : <FriendSkeleton></FriendSkeleton>}
