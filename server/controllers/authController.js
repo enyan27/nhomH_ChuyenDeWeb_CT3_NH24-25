@@ -5,94 +5,80 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
-// Hàm đăng ký người dùng
 const handleRegister = asyncHandler(async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.body.email });
+    const username = await UserModel.findOne({ email: req.body.email });
 
-    if (user) {
-      return res.status(400).json({ message: "Email already exists" });
-    }
-
+    if (username) return res.sendStatus(400);
+    
     const hash = await bcrypt.hash(req.body.password, 10);
     await UserModel.create({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      avatar:
-        req.body.gender === "male"
-          ? "/uploads/avatar-man.png"
-          : "/uploads/avatar-woman.png",
+      avatar: req.body.gender === "male" ? "/uploads/avatar-man.png" : "/uploads/avatar-woman.png",
       password: hash,
       gender: req.body.gender,
     });
-    res.json({ message: "Registration successful" });
+    res.json({ mess: "Successful" });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.sendStatus(500);
     throw new Error(error);
   }
 });
 
-// Hàm đăng nhập
+function generateToken(payload) {
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "30d" });
+}
+
 const handleLogin = asyncHandler(async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.body.email });
+    const username = await UserModel.findOne({ email: req.body.email });
 
-    if (user) {
-      const result = await bcrypt.compare(req.body.password, user.password);
+    if (username) {
+      const result = await bcrypt.compare(req.body.password, username.password);
       if (result) {
-        const { _id, email, firstName, lastName, avatar } = user;
-        const token = jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "1h" });  // Tạo lại token sau khi thay đổi mật khẩu
+        const { _id, email, firstName, lastName, avatar } = username._doc;
+        const token = generateToken({ _id });
         res.cookie("tokens", token, {
           httpOnly: true,
-          secure: false,  // Đảm bảo môi trường đúng
+          secure: false,
           path: "/",
           sameSite: "strict",
         });
-
         res.json({ _id, firstName, lastName, email, avatar, token });
-      } else {
-        res.status(400).json({ message: "Incorrect password" });
-      }
-    } else {
-      res.status(400).json({ message: "Email not found" });
-    }
+      } else res.sendStatus(400);
+    } else res.sendStatus(400);
   } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500);
+    throw new Error(error);
   }
 });
 
-
-// Hàm thay đổi mật khẩu
 const handleChangePassword = asyncHandler(async (req, res) => {
-  const user = req.user;
+  const username = req.username;
   try {
     const { currentPassword, newPassword } = req.body;
-    const checkPassword = await bcrypt.compare(currentPassword, user.password);
+    const checkPassword = await bcrypt.compare(currentPassword, username.password);
     if (checkPassword) {
       const hash = await bcrypt.hash(newPassword, 10);
-      await UserModel.findByIdAndUpdate(user._id, { password: hash });
-      res.json({ message: "Password updated successfully" });
-    } else {
-      res.status(400).json({ message: "Current password is incorrect!" });
-    }
+      await UserModel.findByIdAndUpdate(username._id, { password: hash });
+      res.json("Correct password");
+    } else res.status(400).json("Current password is incorrect!");
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json(error);
   }
 });
 
-// Hàm đăng xuất
 const handleLogout = asyncHandler((req, res) => {
   try {
     res.clearCookie("tokens");
-    res.json({ message: "Logout successful" });
+    res.json({ mess: "Logout Successful" });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json(error);
   }
 });
 
-// Tạo transporter gửi email
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
@@ -101,30 +87,21 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Gửi mã xác nhận qua email
 const sendResetEmail = async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email) {
-      return res.status(400).json({ message: "Email is required" });
-    }
+    if (!email) return res.status(400).json({ message: "Email is required" });
 
-    // Kiểm tra email có tồn tại trong cơ sở dữ liệu không
     const user = await UserModel.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "Email not found" });
-    }
+    if (!user) return res.status(400).json({ message: "Email not found" });
 
-    // Tạo mã xác nhận ngẫu nhiên
     const resetCode = crypto.randomBytes(3).toString("hex");
-    const resetCodeExpires = Date.now() + 3600000; // Mã hết hạn trong 1 giờ
+    const resetCodeExpires = Date.now() + 3600000;
 
-    // Lưu mã xác nhận và thời gian hết hạn vào cơ sở dữ liệu
     user.resetCode = resetCode;
     user.resetCodeExpires = resetCodeExpires;
     await user.save();
 
-    // Gửi email
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -145,7 +122,6 @@ const sendResetEmail = async (req, res) => {
   }
 };
 
-// Xác minh mã xác nhận
 const verifyResetCode = async (req, res) => {
   const { email, code } = req.body;
   const user = await UserModel.findOne({ email });
@@ -162,7 +138,6 @@ const verifyResetCode = async (req, res) => {
   res.status(200).json({ message: "Code verified successfully", token });
 };
 
-// Đặt lại mật khẩu mới
 const resetPassword = async (req, res) => {
   const { email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -185,3 +160,4 @@ module.exports = {
   verifyResetCode,
   resetPassword,
 };
+
