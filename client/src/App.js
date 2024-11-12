@@ -15,14 +15,18 @@ import NotifyPage from "views/NotifyPage";
 import MessagePage from "views/MessagePage";
 import NotFoundPage from "views/NotFoundPage";
 import CommingSoon from "views/CommingSoonPage";
+import FilterPage from "views/FilterPage";
+import ForgotPasswordPage from "views/ForgotPasswordPage";
+import MusicPage from "views/MusicPage";
+
 
 function App() {
   return (
     <Suspense>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        
+        <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/register" element={<RegisterPage></RegisterPage>}></Route>
+        <Route path="/forgot-password" element={<ForgotPasswordPage></ForgotPasswordPage>}></Route>
         <Route element={<MainLayout />}>
           <Route path="/home" element={<HomePage />} />
           <Route path="/friends" element={<FriendPage />} />
@@ -31,8 +35,11 @@ function App() {
           <Route path="/post/:id" element={<PostDetailPage />} />
           <Route path="/post-saved" element={<SavedPage />} />
           <Route path="/chats" element={<ChatPage />} />
+          <Route path="/music" element={<MusicPage />} />
           <Route path="/chats/t/:id" element={<MessagePage />} />
+          <Route path="/search" element={<FilterPage></FilterPage>}></Route>
           <Route path="/comming-soon" element={<CommingSoon />} />
+
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
