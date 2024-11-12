@@ -5,7 +5,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 const FriendList = ({ className, children, ...props }) => {
   return (
     <InfiniteScroll
-      className={`grid grid-cols-2 ${className} gap-x-5 gap-y-4`}
+    // Fix UI - Friend list
+      className={`grid grid-cols-1 ${className} gap-x-5 gap-y-4`}
       loader={
         <>
           <FriendSkeleton />

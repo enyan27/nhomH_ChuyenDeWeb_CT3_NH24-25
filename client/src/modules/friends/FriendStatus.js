@@ -11,7 +11,7 @@ const FriendStatus = ({ className = "", status, isSender, userID }) => {
       return (
         <Button
           variant="outlined"
-          className={`${classGeneral} hover:bg-graySoft hover:dark:bg-gray-700 text-primary border-primary dark:text-white dark:border-white`}
+          className={`${classGeneral} hover:bg-graySoft hover:dark:bg-gray-700 text-primary border-primary`}
           onClick={handleCancel}
         >
           Unfriend

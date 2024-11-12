@@ -99,8 +99,8 @@ const PostItem = ({ postInfo }) => {
   return (
     <>
     {/* Fix UI */}
-      <div className="flex flex-col px-4 rounded-xl bg-whiteSoft dark:bg-darkSoft">
-      {/* <div className="flex flex-col border-b border-graySoft dark:border-gray-700"> */}
+      {/* <div className="flex flex-col px-4 rounded-xl bg-whiteSoft dark:bg-darkSoft"> */}
+      <div className="flex flex-col border-b-2 border-graySoft dark:border-gray-700">
         <div className="flex items-start justify-between mt-5 mb-3">
           <PostMeta timer={renderTime(createdAt)} author={authorID}></PostMeta>
           <div className="flex items-center gap-x-1">
@@ -123,7 +123,10 @@ const PostItem = ({ postInfo }) => {
           <>
             <PostContent>{content}</PostContent>
             {type === "image" ? (
-              <PostImage src={listImg[0]} listImg={listImg}></PostImage>
+              <PostImage 
+                src={listImg[0]} 
+                listImg={listImg}
+              ></PostImage>
             ) : (
               <PostVideo src={linkVideo}></PostVideo>
             )}
