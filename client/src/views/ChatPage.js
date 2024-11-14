@@ -20,7 +20,7 @@ const ChatPage = () => {
   );
 
   useEffect(() => {
-    document.title = "Messages | Twitter";
+    document.title = "Twitter | Messages";
     socket.connect();
     dispatch(chatUserList());
 

@@ -23,7 +23,7 @@ const schema = yup.object({
 const LoginPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    document.title = "Login | Twitter";
+    document.title = "Twitter | Login";
   }, []);
   const {
     handleSubmit,

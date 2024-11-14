@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useBackdropPicture from "hooks/useBackropPicture";
 import ButtonGradient from "components/button/ButtonGradient";
 import PictureDialog from "components/picture/PictureDialog";
-
+// Fix UI - 4 layout
 const PostImage = ({ listImg = [] }) => {
   const { openState, pictureState, handleShowBackdrop } = useBackdropPicture();
   const [clickedPosition, setClickedPosition] = useState(0);
@@ -85,13 +85,13 @@ const PostImage = ({ listImg = [] }) => {
 
   return (
     <>
-      <div className="relative w-full overflow-hidden rounded-lg">
+      <div className="relative w-full overflow-hidden rounded-xl">
         {renderImages()}
       </div>
       <PictureDialog
         openState={openState}
         pictureState={pictureState}
-        position={clickedPosition} // Truyền vị trí ảnh được click
+        position={clickedPosition}
       />
     </>
   );

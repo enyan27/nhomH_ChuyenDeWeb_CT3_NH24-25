@@ -18,6 +18,7 @@ import CommingSoon from "views/CommingSoonPage";
 import FilterPage from "views/FilterPage";
 import ForgotPasswordPage from "views/ForgotPasswordPage";
 import MusicPage from "views/MusicPage";
+import Settings from "views/Settings";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
           <Route path="/music" element={<MusicPage />} />
           <Route path="/chats/t/:id" element={<MessagePage />} />
           <Route path="/search" element={<FilterPage></FilterPage>}></Route>
+          <Route path="/settings" element={<Settings></Settings>}></Route>
           <Route path="/comming-soon" element={<CommingSoon />} />
 
         </Route>

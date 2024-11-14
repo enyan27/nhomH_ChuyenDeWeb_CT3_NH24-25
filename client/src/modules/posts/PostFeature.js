@@ -36,7 +36,7 @@ const PostFeature = ({ linkInfo, username, avatar }) => {
             {username && `Hi ${username}, what's on your mind?`}
           </div>
         </div>
-        {/* On - Select media */}
+        {/* Temp - Select media */}
         <div className="flex justify-between pt-3">
           <div
             className="flex justify-center flex-1 py-[14px] transition-all rounded-lg cursor-pointer hover:bg-graySoft gap-x-3 hover:dark:bg-gray-700 text-text3 dark:text-text4"

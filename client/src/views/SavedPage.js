@@ -13,7 +13,7 @@ const SavedPage = () => {
   const dispatch = useDispatch();
   
   useEffect(() => {
-    document.title = "Bookmarks | Twitter";
+    document.title = "Twitter | Bookmarks";
     currentUser && dispatch(getPostList(`/${currentUser._id}?by=saved`));
   }, [currentUser, dispatch]);
   
@@ -25,7 +25,6 @@ const SavedPage = () => {
       <BackPage haveBackBtn={false}>
         <div className="flex flex-col px-2">
           <h4 className="text-lg font-bold">Bookmarks</h4>
-          {/* Hiển thị số lượng bài viết dựa trên listPost.length */}
           <p className="text-[13px] font-normal text-text4">
             {loading ? "Loading..." : `${listPost.length} posts`}
           </p>

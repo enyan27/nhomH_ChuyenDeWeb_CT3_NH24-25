@@ -39,7 +39,7 @@ const PersonalPage = () => {
     (state) => state.users.profile
   );
   const [fullName, setFullName] = useState("");
-  fullName && (document.title = fullName + " | Twitter");
+  fullName && (document.title = "Twitter | " + fullName);
   useEffect(() => {
     if (userInfo) setFullName(`${userInfo?.firstName} ${userInfo?.lastName}`);
     else error && navigate("/home");

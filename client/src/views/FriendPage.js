@@ -20,7 +20,7 @@ const FriendPage = () => {
     searchParams.get("name") || ""
   );
   useEffect(() => {
-    document.title = "Friends | Twitter";
+    document.title = "Twitter | Friends";
     const filterName = {
       ...filters,
       name: query,

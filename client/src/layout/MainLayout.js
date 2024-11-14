@@ -115,7 +115,7 @@ const MainLayout = () => {
 
 const RightContainer = ({ path }) => {
   switch (path) {
-    // TempUI
+    // Temp UI
     // case "/friends":
     //   return <SideFriend></SideFriend>;
 

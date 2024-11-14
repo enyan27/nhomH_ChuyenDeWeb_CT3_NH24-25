@@ -7,7 +7,7 @@ import EmptyLayout from "layout/EmptyLayout";
 
 const NotifyPage = () => {
   useEffect(() => {
-    document.title = "Notifiations | Twitter";
+    document.title = "Twitter | Notifiations";
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const { listNotify, listUsers } = useSelector((state) => state.notify);

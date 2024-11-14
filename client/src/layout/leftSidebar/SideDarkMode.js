@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { useLanguage } from '../../contexts/LanguageContext';
 
-const MaterialUISwitch = styled(Switch)(({ theme }) => ({
-  width: 62,
-  height: 34,
-  padding: 7,
+const MaterialUISwitch = styled(Switch)(({ checked }) => ({
+  width: 70,
+  height: 40,
+  padding: 8,
   "& .MuiSwitch-switchBase": {
-    margin: 1,
     padding: 0,
+    margin: 1,
     transform: "translateX(6px)",
     "&.Mui-checked": {
       color: "#fff",
-      transform: "translateX(22px)",
+      transform: "translateX(30px)",
       "& .MuiSwitch-thumb:before": {
         backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20"><path fill="${encodeURIComponent(
           "#fff"
@@ -21,14 +23,17 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       },
       "& + .MuiSwitch-track": {
         opacity: 1,
-        backgroundColor: theme.palette.mode === "dark" ? "#8796A5" : "#0072ff",
+        backgroundColor: "#B993D6",
       },
     },
   },
   "& .MuiSwitch-thumb": {
-    backgroundColor: theme.palette.mode === "dark" ? "#fc00ff" : "#003892",
-    width: 32,
-    height: 32,
+    backgroundImage: checked 
+      ? "linear-gradient(45deg, #fbc7d4, #9796f0)"
+      : "linear-gradient(45deg, #414345, #232526)",
+    width: 36,
+    height: 36,
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
     "&:before": {
       content: "''",
       position: "absolute",
@@ -45,12 +50,16 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
   "& .MuiSwitch-track": {
     opacity: 1,
-    backgroundColor: theme.palette.mode === "dark" ? "#8796A5" : "#aab4be",
-    borderRadius: 20 / 2,
+    backgroundColor: checked ? "#003892" : "#aab4be",
+    borderRadius: 20,
+    width: "100%",
+    height: "100%",
   },
 }));
 
+
 const SideDarkMode = () => {
+  const { texts } = useLanguage();
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
@@ -70,17 +79,21 @@ const SideDarkMode = () => {
   };
 
   return (
-    <div className="flex items-center mb-4 gap-x-3">
-      <span>Dark Mode</span>
-      <FormControlLabel
-        control={<MaterialUISwitch sx={{ m: 1 }} checked={checked} />}
-        onChange={handleChange}
+    <div className="flex flex-col m-6">
+      <div className="flex items-center justify-between w-full mb-2">
+        <span className="font-bold flex items-center text-gray-700 dark:text-whiteSoft">
+          <DarkModeIcon className="mr-2 text-gray-500 dark:text-whiteSoft" /> {texts.darkMode}
+        </span>
+        <FormControlLabel
+          control={<MaterialUISwitch sx={{ m: 0 }} checked={checked} />}
+          onChange={handleChange}
+          label=""
+          className="mr-[0]"
       />
-      {/* <Switch
-        checked={checked}
-        onChange={handleChange}
-        inputProps={{ "aria-label": "controlled" }}
-      /> */}
+      </div>
+      <p className="text-sm text-gray-500 mb-5">
+        {texts.darkModeDescription}
+      </p>
     </div>
   );
 };
