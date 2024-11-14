@@ -56,6 +56,7 @@ const PictureDialog = ({ position, openState, pictureState }) => {
 };
 
 PictureDialog.propTypes = {
+  // Fix UI - 4 layout
   position: PropTypes.number,
   openState: PropTypes.any,
   pictureState: PropTypes.any,

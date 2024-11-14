@@ -98,7 +98,7 @@ const PostItem = ({ postInfo }) => {
   };
   return (
     <>
-    {/* Fix UI */}
+    {/* Fix UI - Post UI */}
       {/* <div className="flex flex-col px-4 rounded-xl bg-whiteSoft dark:bg-darkSoft"> */}
       <div className="flex flex-col border-b-2 border-graySoft dark:border-gray-700">
         <div className="flex items-start justify-between mt-5 mb-3">

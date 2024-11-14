@@ -50,7 +50,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    document.title = "Register | Twitter";
+    document.title = "Twitter | Register";
   }, []);
   const {
     handleSubmit,

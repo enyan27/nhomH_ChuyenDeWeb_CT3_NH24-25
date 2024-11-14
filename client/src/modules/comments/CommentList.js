@@ -5,10 +5,11 @@ import useToggle from "hooks/useToggle";
 import CommentSkeleton from "components/skeleton/CommentSkeleton";
 
 const CommentList = ({ children }) => {
-  const [showComment, setShowComment] = useToggle(false);
+  const [showComment, setShowComment] = useToggle(true);
   return (
     <>
-      <div className="flex flex-col items-center mt-2 gap-y-2 commentList">
+    {/* Fix UI - Hide toggle comment */}
+      {/* <div className="flex flex-col items-center mt-2 gap-y-2 commentList">
         <TextLight>Click to {showComment ? "hide" : "show"} comment</TextLight>
         <div
           className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer hover:bg-graySoft bg-whiteSoft"
@@ -18,7 +19,7 @@ const CommentList = ({ children }) => {
             className={`text-[28px] text-text3 ${showComment && "rotate-180"}`}
           />
         </div>
-      </div>
+      </div> */}
       {showComment && (
         <div className="flex flex-col my-5 gap-y-5 show-comment">
           {children}
