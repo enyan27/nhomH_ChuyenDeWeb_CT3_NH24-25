@@ -5,6 +5,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import ReportIcon from '@mui/icons-material/Report';
 
 import { NavLink, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,6 +50,11 @@ const listNav = [
     name: "Music",
     url: "/music",
     icon: <LibraryMusicIcon></LibraryMusicIcon>,
+  },
+  {
+    name: "Report",
+    url: "/report",
+    icon: <ReportIcon></ReportIcon>,
   },
   
   {

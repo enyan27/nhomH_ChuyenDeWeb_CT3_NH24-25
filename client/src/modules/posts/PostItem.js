@@ -9,20 +9,20 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import CommentsDisabledIcon from "@mui/icons-material/CommentsDisabled";
+import RepeatIcon from '@mui/icons-material/Repeat';
 import PostTheme from "./parts/PostTheme";
 import CommentFeature from "modules/comments/CommentFeature";
 import axios from "api/config";
 import Cookies from "js-cookie";
 import renderTime from "utils/renderTime";
-import MenuNav from "components/menu/MenuNav";
-import MenuNavItem from "components/menu/MenuNavItem";
+import { Menu, MenuItem, Snackbar } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert"; 
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, setModeComment } from "redux/posts/postSlice";
-import { Snackbar } from "@mui/material";
 import useSnackbarInfo from "hooks/useSnackbarInfo";
 import AlertDialog from "components/alert/AlertDialog";
 import PostVideo from "./parts/PostVideo";
-import RepeatIcon from '@mui/icons-material/Repeat';
+import PostReport from "./parts/PostReport";
 
 const PostItem = ({ postInfo }) => {
   const { currentUser } = useSelector((state) => state.auth.login);
@@ -41,6 +41,7 @@ const PostItem = ({ postInfo }) => {
     listHeart,
     createdAt,
   } = postInfo;
+
   const { action, handleClose, stateOpen } = useSnackbarInfo();
   const [textAlert, setTextAlert] = useState("");
   const [like, setLike] = useToggle(isLiked);
@@ -48,7 +49,10 @@ const PostItem = ({ postInfo }) => {
   const [modalComment, setModalComment] = useToggle(false);
   const [countLike, setCountLike] = useState(listHeart.length);
   const [open, setOpen] = stateOpen;
+  const [anchorEl, setAnchorEl] = useState(null); 
+  const [openReportDialog, setOpenReportDialog] = useState(false); 
   const dispatch = useDispatch();
+
   const handleLiked = async () => {
     try {
       setLike();
@@ -64,6 +68,15 @@ const PostItem = ({ postInfo }) => {
       console.log(error);
     }
   };
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
   const handleModeComment = async () => {
     try {
       setTextAlert(modeComment ? "Disabled comment" : "Enabled comment");
@@ -80,6 +93,7 @@ const PostItem = ({ postInfo }) => {
       console.log(error);
     }
   };
+
   const handleDeletePost = async () => {
     try {
       setTimeout(async () => {
@@ -96,45 +110,49 @@ const PostItem = ({ postInfo }) => {
       console.log(error);
     }
   };
+
+  const handleReportPost = () => {
+    setOpenReportDialog(true);
+  };
+
   return (
     <>
-    {/* Fix UI */}
-      {/* <div className="flex flex-col px-4 rounded-xl bg-whiteSoft dark:bg-darkSoft"> */}
       <div className="flex flex-col border-b-2 border-graySoft dark:border-gray-700">
         <div className="flex items-start justify-between mt-5 mb-3">
-          <PostMeta timer={renderTime(createdAt)} author={authorID}></PostMeta>
+          <PostMeta timer={renderTime(createdAt)} author={authorID} />
           <div className="flex items-center gap-x-1">
-            <PostSaved isSaved={saved} postID={_id}></PostSaved>
-            {currentUser?._id === authorID._id && (
-              <MenuNav>
-                <MenuNavItem handleExtra={handleModeComment}>
-                  {modeComment ? "Disable" : "Enable"} comment
-                </MenuNavItem>
-                <MenuNavItem handleExtra={() => setOpenDialog(true)}>
-                  Delete post
-                </MenuNavItem>
-              </MenuNav>
-            )}
+            <PostSaved isSaved={saved} postID={_id} />
+            <MoreVertIcon onClick={handleMenuClick} style={{ cursor: "pointer" }} />
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseMenu}
+            >
+              <MenuItem onClick={handleModeComment}>
+                {modeComment ? "Disable Comment" : "Enable Comment"}
+              </MenuItem>
+              <MenuItem onClick={() => setOpenDialog(true)}>Delete Post</MenuItem>
+              <MenuItem onClick={handleReportPost}>Report Post</MenuItem>  {/* Add this menu item */}
+            </Menu>
           </div>
         </div>
+
         {type === "theme" ? (
           <PostTheme theme={theme}>{content}</PostTheme>
         ) : (
           <>
             <PostContent>{content}</PostContent>
             {type === "image" ? (
-              <PostImage 
-                src={listImg[0]} 
-                listImg={listImg}
-              ></PostImage>
+              <PostImage src={listImg[0]} listImg={listImg} />
             ) : (
-              <PostVideo src={linkVideo}></PostVideo>
+              <PostVideo src={linkVideo} />
             )}
           </>
         )}
-        <div className="py-3 ">
-          <div className="flex items-center gap-x-10 justify-between px-16">
 
+        <div className="py-3">
+          <div className="flex items-center gap-x-10 justify-between px-16">
+            {/* Nút Comment */}
             <PostStatus
               hoverColor="group-hover:bg-thirdColor group-hover:heartColor"
               textColor="group-hover:text-heartColor"
@@ -144,24 +162,24 @@ const PostItem = ({ postInfo }) => {
               onClick={setModalComment}
             >
               {modeComment ? (
-                <ChatBubbleOutlineOutlinedIcon className="text-xl"></ChatBubbleOutlineOutlinedIcon>
+                <ChatBubbleOutlineOutlinedIcon className="text-xl" />
               ) : (
-                <CommentsDisabledIcon className="text-xl"></CommentsDisabledIcon>
+                <CommentsDisabledIcon className="text-xl" />
               )}
             </PostStatus>
 
-
+            {/* Nút Repeat Icon */}
             <PostStatus
               hoverColor=""
               quantity={0}
               textColor="text-gray-500"
               title="Repeat Icon"
-              className="cursor-not-allowed" // Comming Soon
+              className="cursor-not-allowed"
             >
-              <RepeatIcon className="text-xl text-gray-500"></RepeatIcon>
+              <RepeatIcon className="text-xl text-gray-500" />
             </PostStatus>
 
-
+            {/* Nút Like */}
             <PostStatus
               hoverColor="group-hover:bg-heartColor group-hover:text-heartColor"
               quantity={countLike}
@@ -174,35 +192,43 @@ const PostItem = ({ postInfo }) => {
               title={like ? "Unlike" : "Like"}
             >
               {like ? (
-                <FavoriteIcon className="text-xl text-heartColor heart-active"></FavoriteIcon>
+                <FavoriteIcon className="text-xl text-heartColor heart-active" />
               ) : (
-                <FavoriteBorderIcon className="text-xl heart-active"></FavoriteBorderIcon>
+                <FavoriteBorderIcon className="text-xl heart-active" />
               )}
             </PostStatus>
           </div>
         </div>
       </div>
+
       {modalComment && (
         <CommentFeature
           modalComment={modalComment}
           handleHideModal={setModalComment}
           post={postInfo}
-        ></CommentFeature>
+        />
       )}
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        message={textAlert}
-        action={action}
-      />
+
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} message={textAlert} action={action} />
+      
       <AlertDialog
         open={openDialog}
         setOpen={setOpenDialog}
         handleExtra={handleDeletePost}
         textConfirm="You want to delete this post?"
         textSupport="This post will be permanently lost if you confirm"
-      ></AlertDialog>
+      />
+
+      <AlertDialog
+        open={openReportDialog}
+        setOpen={setOpenReportDialog}
+        handleExtra={() => {
+          setTextAlert("Post reported successfully");
+          setOpen(true);
+        }}
+        textConfirm="Do you want to report this post?"
+        textSupport="If confirmed, this post will be flagged for review."
+      />
     </>
   );
 };
