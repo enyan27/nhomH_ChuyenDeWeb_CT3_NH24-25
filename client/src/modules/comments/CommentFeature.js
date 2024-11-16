@@ -10,61 +10,92 @@ import ModalLine from "components/modal/ModalLine";
 import CommentItem from "./CommentItem";
 import { socket } from "api/config";
 import { getCommentList } from "redux/comments/commentRequest";
-import { deleteComment, newComment } from "redux/comments/commentSlice";
+import { deleteComment, newComment, updateReplies } from "redux/comments/commentSlice";
 import CommentSkeleton from "components/skeleton/CommentSkeleton";
 import LoadingType from "components/loading/LoadingType";
 import { Link } from "react-router-dom";
 import EmptyLayout from "layout/EmptyLayout";
+import renderTime from "utils/renderTime";
 
 const CommentFeature = ({ handleHideModal, post }) => {
-  const { _id, authorID } = post;
+  const { _id, authorID, createdAt } = post;
   const { currentUser } = useSelector((state) => state.auth.login);
   const [isTyping, setIsTyping] = useState(false);
   const dispatch = useDispatch();
+
+  const { listComment, loading } = useSelector(
+    (state) => state.comments.getComment
+  );
+
+  // Emit typing events
   const emitTyping = useCallback(() => {
     socket.emit("typing");
   }, []);
+
   const emitStopTyping = useCallback(() => {
     socket.emit("stopTyping");
   }, []);
+
+  // Fetch initial comments and join socket room
   useEffect(() => {
     dispatch(getCommentList(_id));
     socket.connect();
     socket.emit("join", { user: currentUser._id, post: _id });
 
-    socket.on("typing", () => {
-      setIsTyping(true);
-    });
-
-    socket.on("stopTyping", () => {
-      setIsTyping(false);
-    });
-
-    socket.on("comment", (comment) => {
-      dispatch(newComment(comment));
-      const el = document.querySelector(".commentList");
-      el.scrollTop = el.scrollHeight;
-    });
-
-    socket.on("deletedComment", (commentId) => {
-      dispatch(deleteComment(commentId));
-    });
     return () => {
       socket.emit("remove-event-comment");
       socket.disconnect();
-      socket.off();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [_id]);
+  }, [dispatch, _id, currentUser._id]);
 
+  // Handle typing events
   useEffect(() => {
-    return () => emitStopTyping();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const handleTyping = () => setIsTyping(true);
+    const handleStopTyping = () => setIsTyping(false);
+
+    socket.on("typing", handleTyping);
+    socket.on("stopTyping", handleStopTyping);
+
+    return () => {
+      socket.off("typing", handleTyping);
+      socket.off("stopTyping", handleStopTyping);
+    };
   }, []);
 
-  const { listComment, loading } = useSelector(
-    (state) => state.comments.getComment
-  );
+  // Handle new comments and updates
+  useEffect(() => {
+    const handleNewComment = (comment) => dispatch(newComment(comment));
+    const handleReplyAdded = ({ commentId, replies }) =>
+      dispatch(updateReplies({ commentId, replies }));
+    const handleCommentDeleted = (commentId) => dispatch(deleteComment(commentId));
+
+    socket.on("comment", handleNewComment);
+    socket.on("replyAdded", handleReplyAdded);
+    socket.on("deletedComment", handleCommentDeleted);
+
+    return () => {
+      socket.off("comment", handleNewComment);
+      socket.off("replyAdded", handleReplyAdded);
+      socket.off("deletedComment", handleCommentDeleted);
+    };
+  }, [dispatch]);
+
+  // Handle reply deleted
+  useEffect(() => {
+    const handleReplyDeleted = ({ commentId, replyId }) => {
+      const comment = listComment.find((c) => c._id === commentId);
+      if (comment) {
+        const updatedReplies = comment.replies.filter((reply) => reply._id !== replyId);
+        dispatch(updateReplies({ commentId, replies: updatedReplies }));
+      }
+    };
+
+    socket.on("replyDeleted", handleReplyDeleted);
+
+    return () => {
+      socket.off("replyDeleted", handleReplyDeleted);
+    };
+  }, [dispatch, listComment]);
 
   return (
     <Overlay handleHideModal={handleHideModal}>
@@ -75,7 +106,7 @@ const CommentFeature = ({ handleHideModal, post }) => {
         <ModalLine />
         <div className="flex flex-col px-5 py-4 max-h-[80vh] overflow-auto">
           <PostMeta
-            timer="22 minutes previous"
+            timer={renderTime(createdAt)}
             sizeAvatar={52}
             author={authorID}
           ></PostMeta>

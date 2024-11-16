@@ -12,9 +12,23 @@ const CommentSchema = mongoose.Schema(
       type: String,
       ref: "posts",
     },
+    replies: [
+      {
+        content: String,
+        userID: {
+          type: String,
+          ref: "users",
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
+
 
 const CommentModel = mongoose.model("comments", CommentSchema);
 

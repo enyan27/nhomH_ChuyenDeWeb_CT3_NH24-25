@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addNewComment, getCommentList } from "./commentRequest";
+import { addNewComment, getCommentList, addReplyToComment } from "./commentRequest";
 
 const commentSlice = createSlice({
   name: "comments",
@@ -20,12 +20,18 @@ const commentSlice = createSlice({
       state.getComment.listComment.unshift(payload);
     },
     deleteComment: (state, { payload }) => {
-      const { listComment } = state.getComment;
-      state.getComment.listComment = listComment.filter(
+      state.getComment.listComment = state.getComment.listComment.filter(
         (comment) => comment._id !== payload
       );
-    },
-  },
+    }, 
+    updateReplies: (state, { payload }) => {
+      const { commentId, replies } = payload;
+      const comment = state.getComment.listComment.find((c) => c._id === commentId);
+      if (comment) {
+        comment.replies = replies;
+      }
+    }, 
+  },  
   extraReducers: (builder) => {
     builder
       .addCase(getCommentList.fulfilled, (state, { payload }) => {
@@ -53,9 +59,18 @@ const commentSlice = createSlice({
         state.addComment.loading = false;
         state.addComment.error = payload;
       });
+    builder
+      .addCase(addReplyToComment.fulfilled, (state, { payload }) => {
+        const comment = state.getComment.listComment.find(
+          (c) => c._id === payload.commentId
+        );
+        if (comment) {
+          comment.replies = payload.replies;
+        }
+      });
   },
 });
 
-export const { newComment, deleteComment } = commentSlice.actions;
+export const { newComment, deleteComment, updateReplies } = commentSlice.actions;
 
 export default commentSlice.reducer;

@@ -6,12 +6,19 @@ const getCommentByPostID = asyncHandler(async (req, res) => {
   try {
     const listComment = await CommentModel.find({
       postID: req.params.id,
-    }).populate("userID", ["_id", "firstName", "lastName", "avatar"]);
+    })
+      .populate("userID", ["_id", "firstName", "lastName", "avatar"])
+      .populate({
+        path: "replies.userID",
+        select: ["_id", "firstName", "lastName", "avatar"],
+      });
+
     res.json({ listComment });
   } catch (error) {
     res.status(500).json("Server error");
   }
 });
+
 
 const handleAddComments = asyncHandler(async (req, res) => {
   const username = req.username;
@@ -36,4 +43,36 @@ const handleAddComments = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { getCommentByPostID, handleAddComments };
+// API - Reply
+const handleAddReply = asyncHandler(async (req, res) => {
+  const { content } = req.body;
+  const { commentId } = req.params;
+  const username = req.username;
+
+  try {
+    if (!content || content.trim().length === 0) {
+      return res.status(400).json("Reply must have 1 character at least");
+    }
+
+    const comment = await CommentModel.findById(commentId);
+    if (!comment) return res.status(404).json("Comment not found");
+
+    const reply = {
+      content,
+      userID: username._id,
+    };
+
+    comment.replies.push(reply);
+    await comment.save();
+
+    const populatedReply = await CommentModel.findById(commentId)
+      .select("replies")
+      .populate("replies.userID", ["_id", "firstName", "lastName", "avatar"]);
+
+    res.status(201).json(populatedReply.replies);
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+});
+
+module.exports = { getCommentByPostID, handleAddComments, handleAddReply };
