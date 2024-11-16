@@ -42,3 +42,24 @@ export const addNewComment = createAsyncThunk(
     }
   }
 );
+
+// Fix UI - Add reply
+export const addReplyToComment = createAsyncThunk(
+  "comments/addReply",
+  async ({ commentId, content }, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(
+        `/comments/${commentId}/replies`,
+        { content },
+        {
+          headers: {
+            authorization: "Bearer " + Cookies.get("tokens"),
+          },
+        }
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);

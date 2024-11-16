@@ -57,4 +57,64 @@ module.exports = function commentHandler(socket, io) {
   socket.on("remove-event-comment", () => {
     removeUser(socket.id);
   });
+
+  // API - Add Reply
+  socket.on("sendReply", async ({ commentId, reply }) => {
+    const currentUser = getCurrentUser(socket.id)[0];
+  
+    try {
+      if (!currentUser) return socket.emit("error", "Invalid user");
+  
+      const comment = await CommentModel.findById(commentId);
+      if (!comment) return socket.emit("error", "Comment not found");
+  
+      const newReply = {
+        content: reply.content,
+        userID: currentUser.user,
+      };
+  
+      comment.replies.push(newReply);
+      await comment.save();
+  
+      const populatedComment = await CommentModel.findById(commentId).populate(
+        "replies.userID",
+        ["_id", "firstName", "lastName", "avatar"]
+      );
+  
+      io.to(currentUser.post).emit("replyAdded", {
+        commentId,
+        replies: populatedComment.replies,
+      });
+    } catch (err) {
+      socket.emit("error", err.message);
+    }
+  });
+  
+  // API - Destroy Reply
+  socket.on("deleteReply", async ({ commentId, replyId }) => {
+    const currentUser = getCurrentUser(socket.id)[0];
+  
+    try {
+      if (!currentUser) return socket.emit("error", "Invalid user");
+  
+      const comment = await CommentModel.findById(commentId);
+      if (!comment) return socket.emit("error", "Comment not found");
+  
+      const replyIndex = comment.replies.findIndex(
+        (r) => r._id.toString() === replyId
+      );
+      if (replyIndex === -1) return socket.emit("error", "Reply not found");
+  
+      if (comment.replies[replyIndex].userID.toString() !== currentUser.user) {
+        return socket.emit("error", "Unauthorized");
+      }
+  
+      comment.replies.splice(replyIndex, 1);
+      await comment.save();
+  
+      io.to(currentUser.post).emit("replyDeleted", { commentId, replyId });
+    } catch (err) {
+      socket.emit("error", err.message);
+    }
+  });
 };
