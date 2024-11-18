@@ -22,7 +22,7 @@ import { deletePost, setModeComment } from "redux/posts/postSlice";
 import useSnackbarInfo from "hooks/useSnackbarInfo";
 import AlertDialog from "components/alert/AlertDialog";
 import PostVideo from "./parts/PostVideo";
-import PostReport from "./parts/PostReport";
+
 
 const PostItem = ({ postInfo }) => {
   const { currentUser } = useSelector((state) => state.auth.login);
@@ -222,10 +222,6 @@ const PostItem = ({ postInfo }) => {
       <AlertDialog
         open={openReportDialog}
         setOpen={setOpenReportDialog}
-        handleExtra={() => {
-          setTextAlert("Post reported successfully");
-          setOpen(true);
-        }}
         textConfirm="Do you want to report this post?"
         textSupport="If confirmed, this post will be flagged for review."
       />
