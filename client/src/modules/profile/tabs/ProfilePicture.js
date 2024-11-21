@@ -51,7 +51,7 @@ const ProfilePicture = () => {
   return (
     <div>
       {listUpload.length > 0 ? (
-        <div className="grid grid-cols-4 px-4 my-5 gap-x-1">
+        <div className="grid grid-cols-4 p-4 gap-1">
           {listUpload.map((img, i) => (
             <div
               key={img._id}
@@ -64,7 +64,7 @@ const ProfilePicture = () => {
               <img
                 key={img._id}
                 src={img.link}
-                className="h-[120px] object-cover "
+                className="h-[120px] w-full object-cover"
                 alt={img.name}
               />
               <div

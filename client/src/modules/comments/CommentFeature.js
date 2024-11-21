@@ -113,7 +113,7 @@ const CommentFeature = ({ handleHideModal, post }) => {
           <div className="px-[26px] my-2 flex items-center">
             <div className="h-[45px] w-[2px] bg-[#ddd]"></div>
             <p className="ml-5 text-sm text-text3 dark:text-text4">
-              Replying to <b className="text-thirdColor">{authorID.lastName}</b>
+              Replying to <b className="text-thirdColor dark:text-whiteSoft">{authorID.firstName + ' ' +authorID.lastName}</b>
             </p>
           </div>
           <div className="flex items-start gap-x-3">

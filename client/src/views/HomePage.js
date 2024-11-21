@@ -32,7 +32,7 @@ const HomePage = () => {
         </div>
       </BackPage>
     {/* Fix UI - Post list */}
-      <div className="px-4 py-3">
+      <div className="py-3">
         <PostFeature
           username={currentUser?.lastName}
           avatar={currentUser?.avatar}

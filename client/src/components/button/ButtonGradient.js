@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import LoadingSpin from "components/loading/LoadingSpin";
 import { Button, CircularProgress } from "@mui/material";
 
 const ButtonGradient = ({
@@ -14,11 +13,11 @@ const ButtonGradient = ({
 }) => {
   switch (theme) {
     case 1:
-      className += " from-thirdColor to-primary";
+      className += " from-primary to-primary";
       break;
 
     case 2:
-      className += " from-thirdColor to-secondary";
+      className += " from-secondary to-secondary";
       break;
     default:
       break;
