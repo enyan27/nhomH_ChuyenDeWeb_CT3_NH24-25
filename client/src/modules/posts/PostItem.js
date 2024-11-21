@@ -15,8 +15,8 @@ import CommentFeature from "modules/comments/CommentFeature";
 import axios from "api/config";
 import Cookies from "js-cookie";
 import renderTime from "utils/renderTime";
-import { Menu, MenuItem, Snackbar } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert"; 
+import { Menu, MenuItem, Snackbar, Dialog, DialogTitle, DialogContent, DialogActions, Button, Radio, RadioGroup, FormControlLabel } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, setModeComment } from "redux/posts/postSlice";
 import useSnackbarInfo from "hooks/useSnackbarInfo";
@@ -49,8 +49,9 @@ const PostItem = ({ postInfo }) => {
   const [modalComment, setModalComment] = useToggle(false);
   const [countLike, setCountLike] = useState(listHeart.length);
   const [open, setOpen] = stateOpen;
-  const [anchorEl, setAnchorEl] = useState(null); 
-  const [openReportDialog, setOpenReportDialog] = useState(false); 
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openReportDialog, setOpenReportDialog] = useState(false);
+  const [reason, setReason] = useState(""); // State to store the selected reason
   const dispatch = useDispatch();
 
   const handleLiked = async () => {
@@ -115,6 +116,31 @@ const PostItem = ({ postInfo }) => {
     setOpenReportDialog(true);
   };
 
+  const confirmReportPost = async () => {
+    try {
+      // Gọi API để report bài viết với lý do đã chọn
+      await axios({
+        method: "POST",
+        url: "/posts/report/" + _id,
+        headers: {
+          authorization: "Bearer " + Cookies.get("tokens"),
+        },
+        data: {
+          reason
+        }
+      });
+      // Hiển thị thông báo thành công
+      setTextAlert("Post reported successfully");
+      setOpen(true); // Mở Snackbar để thông báo
+      setOpenReportDialog(false); // Đóng dialog
+    } catch (error) {
+      console.log(error);
+      // Xử lý lỗi và hiển thị thông báo
+      setTextAlert("Failed to report post");
+      setOpen(true);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col border-b-2 border-graySoft dark:border-gray-700">
@@ -132,7 +158,7 @@ const PostItem = ({ postInfo }) => {
                 {modeComment ? "Disable Comment" : "Enable Comment"}
               </MenuItem>
               <MenuItem onClick={() => setOpenDialog(true)}>Delete Post</MenuItem>
-              <MenuItem onClick={handleReportPost}>Report Post</MenuItem>  {/* Add this menu item */}
+              <MenuItem onClick={handleReportPost}>Report Post</MenuItem>
             </Menu>
           </div>
         </div>
@@ -152,7 +178,6 @@ const PostItem = ({ postInfo }) => {
 
         <div className="py-3">
           <div className="flex items-center gap-x-10 justify-between px-16">
-            {/* Nút Comment */}
             <PostStatus
               hoverColor="group-hover:bg-thirdColor group-hover:heartColor"
               textColor="group-hover:text-heartColor"
@@ -168,7 +193,6 @@ const PostItem = ({ postInfo }) => {
               )}
             </PostStatus>
 
-            {/* Nút Repeat Icon */}
             <PostStatus
               hoverColor=""
               quantity={0}
@@ -179,7 +203,6 @@ const PostItem = ({ postInfo }) => {
               <RepeatIcon className="text-xl text-gray-500" />
             </PostStatus>
 
-            {/* Nút Like */}
             <PostStatus
               hoverColor="group-hover:bg-heartColor group-hover:text-heartColor"
               quantity={countLike}
@@ -210,7 +233,7 @@ const PostItem = ({ postInfo }) => {
       )}
 
       <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} message={textAlert} action={action} />
-      
+
       <AlertDialog
         open={openDialog}
         setOpen={setOpenDialog}
@@ -219,14 +242,29 @@ const PostItem = ({ postInfo }) => {
         textSupport="This post will be permanently lost if you confirm"
       />
 
-      <AlertDialog
-        open={openReportDialog}
-        setOpen={setOpenReportDialog}
-        textConfirm="Do you want to report this post?"
-        textSupport="If confirmed, this post will be flagged for review."
-      />
+      <Dialog open={openReportDialog} onClose={() => setOpenReportDialog(false)}>
+        <DialogTitle>Report Post</DialogTitle>
+        <DialogContent>
+          <RadioGroup value={reason} onChange={(e) => setReason(e.target.value)}>
+            <FormControlLabel value="Spam" control={<Radio />} label="Spam" />
+            <FormControlLabel value="Harassment" control={<Radio />} label="Harassment" />
+            <FormControlLabel value="Misinformation" control={<Radio />} label="Misinformation" />
+            <FormControlLabel value="Other" control={<Radio />} label="Other" />
+          </RadioGroup>
+        </DialogContent>
+                <DialogActions>
+          <Button onClick={() => setOpenReportDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmReportPost} color="primary">
+            Report
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
 
 export default PostItem;
+
+          

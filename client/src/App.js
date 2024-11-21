@@ -36,7 +36,7 @@ function App() {
           <Route path="/post-saved" element={<SavedPage />} />
           <Route path="/chats" element={<ChatPage />} />
           <Route path="/music" element={<MusicPage />} />
-          <Route path="/report" element={<ReportPage />} />
+          <Route path="/post-report" element={<ReportPage />} />
           <Route path="/chats/t/:id" element={<MessagePage />} />
           <Route path="/search" element={<FilterPage></FilterPage>}></Route>
           <Route path="/comming-soon" element={<CommingSoon />} />

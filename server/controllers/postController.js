@@ -7,6 +7,7 @@ const PostModel = require("../models/PostModel");
 const UserModel = require("../models/UserModel");
 const removeTones = require("../utils/removeTones");
 const shuffleArray = require("../utils/shuffleArray");
+const ReportModel = require('../models/ReportModel');
 
 async function checkSavedAndLiked(listPost, username) {
   const { listSaved, _id } = username;
@@ -38,15 +39,21 @@ const getPostList = asyncHandler(async (req, res) => {
     ]);
 
     const { keyword, by } = req.query;
+
+    // Tìm kiếm bài viết theo keyword (nếu có)
     if (keyword) {
       listPost = listPost.filter((post) =>
         searchListByContent(post.content, keyword)
       );
     }
 
+    // Lọc bài viết dựa trên giá trị "by"
     if (by === "saved") {
       listPost = await checkSavedAndLiked(listPost, username);
       listPost = listPost.filter((post) => post.saved);
+    } else if (by === "reported") {
+      // Lọc bài viết đã được báo cáo
+      listPost = listPost.filter((post) => post.reported === true);
     } else {
       listPost = await checkSavedAndLiked(listPost, username);
       if (by === "like") {
@@ -69,12 +76,14 @@ const getPostList = asyncHandler(async (req, res) => {
         );
       }
     }
+
     res.json({ listPost });
   } catch (error) {
     const errorMsg = JSON.stringify(error);
     res.status(500).json(errorMsg);
   }
 });
+
 
 
 // OK
@@ -247,6 +256,36 @@ const handleSavePost = asyncHandler(async (req, res) => {
   }
 });
 
+const handleReportPost = asyncHandler(async (req, res) => {
+  const postId = req.params.id;
+  const userId = req.username._id; // Assuming username contains the user info
+  try {
+    // Tìm và cập nhật trạng thái "reported" cho bài viết
+    const post = await PostModel.findByIdAndUpdate(
+      postId,
+      { reported: true },
+      { new: true }
+    );
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Lưu thông tin báo cáo vào ReportModel
+    await ReportModel.create({
+      postId,
+      reportedBy: userId,
+      reason: req.body.reason || "No reason specified"
+    });
+
+    res.status(200).json({ message: "Post reported successfully", post });
+  } catch (error) {
+    console.error("Error reporting post:", error);
+    res.status(500).json({ message: "Failed to report post", error });
+  }
+});
+
+
+
 const handleDeletePost = asyncHandler(async (req, res) => {
   const username = req.username;
   try {
@@ -288,4 +327,5 @@ module.exports = {
   handleDeletePost,
   handleShowHeart,
   handleSavePost,
+  handleReportPost, // Export hàm mới
 };

@@ -14,6 +14,7 @@ const ReportPage = () => {
 
   useEffect(() => {
     document.title = "Reported Posts | AppName";
+    // Gọi API chỉ lấy bài viết đã được báo cáo
     currentUser && dispatch(getPostList(`/${currentUser._id}?by=reported`));
   }, [currentUser, dispatch]);
 

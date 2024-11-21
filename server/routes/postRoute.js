@@ -7,6 +7,7 @@ const {
   handleSavePost,
   handleShowHeart,
   getPostPersonal,
+  handleReportPost, // Import hàm mới
 } = require("../controllers/postController");
 const verifyToken = require("../middleWare/verifyToken");
 const upload = require("../utils/uploadStorage");
@@ -30,6 +31,8 @@ router.post(
 );
 
 router.post("/heart/:id", verifyToken, handleShowHeart);
+
+router.post("/report/:id", verifyToken, handleReportPost); // Thêm route mới
 
 router.delete("/:id", verifyToken, handleDeletePost);
 

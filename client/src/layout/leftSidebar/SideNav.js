@@ -53,7 +53,7 @@ const listNav = [
   },
   {
     name: "Report",
-    url: "/report",
+    url: "/post-report",
     icon: <ReportIcon></ReportIcon>,
   },
   
