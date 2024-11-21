@@ -98,90 +98,91 @@ const PostItem = ({ postInfo }) => {
   };
   return (
     <>
-    {/* Fix UI - Post UI */}
+      {/* Fix UI - Post UI */}
       {/* <div className="flex flex-col px-4 rounded-xl bg-whiteSoft dark:bg-darkSoft"> */}
-      <div className="flex flex-col border-b-2 border-graySoft dark:border-gray-700">
-        <div className="flex items-start justify-between mt-5 mb-3">
-          <PostMeta timer={renderTime(createdAt)} author={authorID}></PostMeta>
-          <div className="flex items-center gap-x-1">
-            <PostSaved isSaved={saved} postID={_id}></PostSaved>
-            {currentUser?._id === authorID._id && (
-              <MenuNav>
-                <MenuNavItem handleExtra={handleModeComment}>
-                  {modeComment ? "Disable" : "Enable"} comment
-                </MenuNavItem>
-                <MenuNavItem handleExtra={() => setOpenDialog(true)}>
-                  Delete post
-                </MenuNavItem>
-              </MenuNav>
-            )}
+      <div className="flex flex-col border-b border-graySoft dark:border-gray-700">
+        <div className="px-4">
+          <div className="flex items-start justify-between mt-5 mb-3">
+            <PostMeta timer={renderTime(createdAt)} author={authorID}></PostMeta>
+            <div className="flex items-center gap-x-1">
+              <PostSaved isSaved={saved} postID={_id}></PostSaved>
+              {currentUser?._id === authorID._id && (
+                <MenuNav>
+                  <MenuNavItem handleExtra={handleModeComment}>
+                    {modeComment ? "Disable" : "Enable"} comment
+                  </MenuNavItem>
+                  <MenuNavItem handleExtra={() => setOpenDialog(true)}>
+                    Delete post
+                  </MenuNavItem>
+                </MenuNav>
+              )}
+            </div>
+          </div>
+
+          {type === "theme" ? (
+            <PostTheme theme={theme}>{content}</PostTheme>
+          ) : (
+            <>
+              <PostContent>{content}</PostContent>
+              {type === "image" ? (
+                <PostImage
+                  src={listImg[0]}
+                  listImg={listImg}
+                ></PostImage>
+              ) : (
+                <PostVideo src={linkVideo}></PostVideo>
+              )}
+            </>
+          )}
+          <div className="py-3 ">
+            <div className="flex items-center gap-x-10 justify-between px-16">
+
+              <PostStatus
+                hoverColor="group-hover:bg-primaryBlue group-hover:text-primaryBlue"
+                textColor="group-hover:text-primaryBlue"
+                quantity={commentCount}
+                className={!modeComment ? "pointer-events-none opacity-60" : ""}
+                title="Comment"
+                onClick={setModalComment}
+              >
+                {modeComment ? (
+                  <ChatBubbleOutlineOutlinedIcon className="text-xl"></ChatBubbleOutlineOutlinedIcon>
+                ) : (
+                  <CommentsDisabledIcon className="text-xl"></CommentsDisabledIcon>
+                )}
+              </PostStatus>
+
+              <PostStatus
+                hoverColor="group-hover:bg-retweetColor group-hover:text-retweetColor"
+                textColor="group-hover:text-retweetColor"
+                quantity={-1}
+                title="Repeat Icon"
+                className="" // Comming Soon
+              >
+                <RepeatIcon className="text-xl"></RepeatIcon>
+              </PostStatus>
+
+              <PostStatus
+                hoverColor="group-hover:bg-heartColor group-hover:text-heartColor"
+                quantity={countLike}
+                textColor={
+                  like
+                    ? "text-heartColor"
+                    : "group-hover:text-heartColor transition-colors"
+                }
+                onClick={handleLiked}
+                title={like ? "Unlike" : "Like"}
+              >
+                {like ? (
+                  <FavoriteIcon className="text-xl text-heartColor heart-active"></FavoriteIcon>
+                ) : (
+                  <FavoriteBorderIcon className="text-xl heart-active"></FavoriteBorderIcon>
+                )}
+              </PostStatus>
+            </div>
           </div>
         </div>
-        {type === "theme" ? (
-          <PostTheme theme={theme}>{content}</PostTheme>
-        ) : (
-          <>
-            <PostContent>{content}</PostContent>
-            {type === "image" ? (
-              <PostImage 
-                src={listImg[0]} 
-                listImg={listImg}
-              ></PostImage>
-            ) : (
-              <PostVideo src={linkVideo}></PostVideo>
-            )}
-          </>
-        )}
-        <div className="py-3 ">
-          <div className="flex items-center gap-x-10 justify-between px-16">
-
-            <PostStatus
-              hoverColor="group-hover:bg-thirdColor group-hover:heartColor"
-              textColor="group-hover:text-heartColor"
-              quantity={commentCount}
-              className={!modeComment ? "pointer-events-none opacity-60" : ""}
-              title="Comment"
-              onClick={setModalComment}
-            >
-              {modeComment ? (
-                <ChatBubbleOutlineOutlinedIcon className="text-xl"></ChatBubbleOutlineOutlinedIcon>
-              ) : (
-                <CommentsDisabledIcon className="text-xl"></CommentsDisabledIcon>
-              )}
-            </PostStatus>
-
-
-            <PostStatus
-              hoverColor=""
-              quantity={0}
-              textColor="text-gray-500"
-              title="Repeat Icon"
-              className="cursor-not-allowed" // Comming Soon
-            >
-              <RepeatIcon className="text-xl text-gray-500"></RepeatIcon>
-            </PostStatus>
-
-
-            <PostStatus
-              hoverColor="group-hover:bg-heartColor group-hover:text-heartColor"
-              quantity={countLike}
-              textColor={
-                like
-                  ? "text-heartColor"
-                  : "group-hover:text-heartColor transition-colors"
-              }
-              onClick={handleLiked}
-              title={like ? "Unlike" : "Like"}
-            >
-              {like ? (
-                <FavoriteIcon className="text-xl text-heartColor heart-active"></FavoriteIcon>
-              ) : (
-                <FavoriteBorderIcon className="text-xl heart-active"></FavoriteBorderIcon>
-              )}
-            </PostStatus>
-          </div>
-        </div>
-      </div>
+      </div> 
       {modalComment && (
         <CommentFeature
           modalComment={modalComment}

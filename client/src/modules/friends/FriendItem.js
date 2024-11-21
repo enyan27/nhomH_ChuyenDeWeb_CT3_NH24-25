@@ -16,29 +16,12 @@ const FriendItem = ({
   fullName,
 }) => {
   return (
-    // <div className="flex flex-col items-center justify-between p-4 h-[280px] border rounded-xl border-strock dark:border-darkStroke">
-    //   <Link to={linkInfo} className="flex flex-col items-center">
-    //     <Avatar alt={fullName} src={src} sx={{ width: 80, height: 80 }} />
-    //     <TextUsername type="bold" className="mt-2 text-lg">
-    //       {fullName}
-    //     </TextUsername>
-    //     <TextLight className="mb-1">{email}</TextLight>
-    //   </Link>
-    //   <div className="flex flex-col w-full gap-y-2">
-    //     <FriendStatus
-    //       className="w-full p-[10px] text-base font-semibold"
-    //       status={status}
-    //       isSender={isSender}
-    //       userID={userID}
-    //     ></FriendStatus>
-    //   </div>
-    // </div>
     <div className="flex items-center justify-between p-4 h-[80px] border rounded-xl border-strock dark:border-darkStroke">
       <Link to={linkInfo} className="flex items-center">
         <Avatar
           alt={fullName}
           src={src}
-          sx={{ width: 50, height: 50 }} // Giảm kích thước avatar
+          sx={{ width: 50, height: 50 }}
           className="mr-4"
         />
         <div className="flex flex-col">
@@ -48,12 +31,14 @@ const FriendItem = ({
           <TextLight>{email}</TextLight>
         </div>
       </Link>
-      <FriendStatus
-        className="p-[10px] text-base font-semibold px-[30px]"
-        status={status}
-        isSender={isSender}
-        userID={userID}
-      />
+      {status !== -1 && (
+        <FriendStatus
+          className="p-[10px] text-base font-semibold px-[30px]"
+          status={status}
+          isSender={isSender}
+          userID={userID}
+        />
+      )}
     </div>
   );
 };

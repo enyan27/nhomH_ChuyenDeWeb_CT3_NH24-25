@@ -55,7 +55,7 @@ const CommentForm = ({ postID = "", emitTyping, emitStopTyping }) => {
         <Button
           variant="contained"
           type="submit"
-          className={`w-[100px] bg-primary rounded-full py-[6px] transition-all ${
+          className={`w-[100px] bg-primary font-semibold rounded-full py-[6px] transition-all ${
             loading && "pointer-events-none bg-opacity-30"
           } ${
             (!isDirty || errors?.content) && "pointer-events-none opacity-30"

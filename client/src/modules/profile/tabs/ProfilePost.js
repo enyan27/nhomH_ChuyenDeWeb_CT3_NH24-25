@@ -17,7 +17,7 @@ const ProfilePost = ({ yourSelf }) => {
   }, []);
   const { loading, listPost } = useSelector((state) => state.posts.getPost);
   return (
-    <div className="flex flex-col p-4 gap-y-3">
+    <div className="flex flex-col gap-y-3">
       {yourSelf && (
         <PostFeature
           linkInfo={"/profile/" + currentUser?._id}

@@ -8,10 +8,12 @@ module.exports = {
         body: ["Poppins", "sans-serif;"],
       },
       colors: {
-        primary: "#000",
+        primary:"#000",
+        primaryBlue: "#1c94e5",
         secondary: "#000",
         thirdColor: "#000",
-        heartColor: "#808080",
+        heartColor: "#f91880",
+        retweetColor: "#34e89e",
 
         darkLite: "#000", // bg all
         darkSecondary: "#1C1C24",

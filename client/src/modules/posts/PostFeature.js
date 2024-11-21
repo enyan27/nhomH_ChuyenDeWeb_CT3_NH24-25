@@ -18,7 +18,9 @@ const PostFeature = ({ linkInfo, username, avatar }) => {
   };
   return (
     <>
-      <div className="px-4 pt-4 pb-3 bg-whiteSoft dark:bg-darkSoft rounded-xl">
+      {/* Fix UI - Post UI */}
+      {/* <div className="px-4 pt-4 pb-3 bg-whiteSoft dark:bg-darkSoft rounded-xl"> */}
+      <div className="px-4 pt-4 pb-3 border-b border-graySoft dark:border-gray-700">
         {showModal && (
           <PostAddNew
             handleHideModal={setShowModal}
@@ -51,7 +53,7 @@ const PostFeature = ({ linkInfo, username, avatar }) => {
             Video
           </div>
         </div>
-        
+
       </div>
     </>
   );

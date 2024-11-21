@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 
 const PostSkeleton = () => {
   return (
-    <div className="flex flex-col px-4 rounded-lg bg-whiteSoft dark:bg-darkSoft dark-skeleton">
+    <div className="flex flex-col px-4 bg-whiteSoft dark:bg-darkSoft dark-skeleton">
       <div className="flex items-start justify-between mt-5 mb-3">
         <div className="flex items-center gap-x-3">
           <Skeleton variant="circular" width={42} height={42} />

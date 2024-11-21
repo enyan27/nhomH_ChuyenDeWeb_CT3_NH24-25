@@ -31,7 +31,7 @@ const SavedPage = () => {
         </div>
       </BackPage>
       
-      <div className="px-4 my-3">
+      <div className="my-3">
         {!loading && listPost?.length === 0 ? (
           <EmptyLayout
             linkImg="/img/profile-empty.png"

@@ -105,7 +105,7 @@ const SideNav = () => {
         <NavLink
           className={({ isActive }) =>
             isActive
-              ? `${navClass} dark:bg-slate-700 bg-slate-200 pointer-events-none`
+              ? `${navClass} dark:bg-darkSoft bg-slate-200 pointer-events-none`
               : navClass
           }
           to={nav.url}

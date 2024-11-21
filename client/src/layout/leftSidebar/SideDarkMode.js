@@ -57,20 +57,21 @@ const MaterialUISwitch = styled(Switch)(({ checked }) => ({
   },
 }));
 
-
 const SideDarkMode = () => {
   const { texts } = useLanguage();
-  const [checked, setChecked] = useState(false);
-
-  useEffect(() => {
+  const [checked, setChecked] = useState(() => {
+    // Khởi tạo trạng thái từ localStorage
     const storedTheme = localStorage.getItem("dark-mode");
-    setChecked(storedTheme === "true");
-  }, []);
+    return storedTheme === "true";
+  });
 
+  // Đồng bộ class `dark` với trạng thái `checked`
   useEffect(() => {
-    checked
-      ? document.querySelector("html").classList.add("dark")
-      : document.querySelector("html").classList.remove("dark");
+    if (checked) {
+      document.querySelector("html").classList.add("dark");
+    } else {
+      document.querySelector("html").classList.remove("dark");
+    }
   }, [checked]);
 
   const handleChange = (event) => {
@@ -89,11 +90,9 @@ const SideDarkMode = () => {
           onChange={handleChange}
           label=""
           className="mr-[0]"
-      />
+        />
       </div>
-      <p className="text-sm text-gray-500 mb-5">
-        {texts.darkModeDescription}
-      </p>
+      <p className="text-sm text-gray-500 mb-5">{texts.darkModeDescription}</p>
     </div>
   );
 };
