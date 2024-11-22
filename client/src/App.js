@@ -19,7 +19,8 @@ import FilterPage from "views/FilterPage";
 import ForgotPasswordPage from "views/ForgotPasswordPage";
 import MusicPage from "views/MusicPage";
 import Settings from "views/Settings";
-
+import PremiumPage from "views/PremiumPage";
+import PaymentPage from "views/PaymentPage";
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
           <Route path="/post-saved" element={<SavedPage />} />
           <Route path="/chats" element={<ChatPage />} />
           <Route path="/music" element={<MusicPage />} />
+          <Route path="/premium" element={<PremiumPage />} />
+          <Route path="/payment" element={<PaymentPage />} />
           <Route path="/chats/t/:id" element={<MessagePage />} />
           <Route path="/search" element={<FilterPage></FilterPage>}></Route>
           <Route path="/settings" element={<Settings></Settings>}></Route>

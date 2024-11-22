@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { useLanguage } from "../../contexts/LanguageContext"; // Import LanguageContext
 
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
@@ -56,6 +57,11 @@ const SideNav = () => {
       name: texts.music,
       url: "/music",
       icon: <LibraryMusicIcon />,
+    },
+    {
+      name: texts.premium,
+      url: "/premium",
+      icon: <AttachMoneyIcon/>,
     },
     {
       name: texts.settings,
