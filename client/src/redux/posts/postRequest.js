@@ -85,3 +85,42 @@ export const getPostList = createAsyncThunk(
     }
   }
 );
+
+export const retweetPost = createAsyncThunk(
+  "posts/retweet",
+  async ({ content, retweetPostID }, { rejectWithValue }) => {
+    try {
+      const res = await axios({
+        method: "POST",
+        url: "/posts/retweet",
+        data: { content, retweetPostID },
+        headers: {
+          authorization: "Bearer " + Cookies.get("tokens"),
+        },
+      });
+      toast.success("Retweeted successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return res.data;
+    } catch (error) {
+      toast.error("Failed to retweet. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
