@@ -7,6 +7,8 @@ const authSlice = createSlice({
     login: {
       currentUser: null,
       isLoading: false,
+      
+      isVerified: false,
     },
     register: { isLoading: false, success: false },
   },
@@ -19,6 +21,9 @@ const authSlice = createSlice({
     },
     resetRegister: (state) => {
       state.register.success = false;
+    },
+    verifyPayment: (state) => {
+      state.login.isVerified = true; // Cập nhật trạng thái "đã thanh toán"
     },
   },
   extraReducers: (builder) => {
@@ -49,6 +54,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginRefresh, logoutAccount, resetRegister } = authSlice.actions;
+export const { loginRefresh, logoutAccount, resetRegister,verifyPayment  } = authSlice.actions;
 
 export default authSlice.reducer;

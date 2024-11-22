@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import BackPage from "components/common/BackPage";
+import { useDispatch } from "react-redux";
+import { verifyPayment } from "redux/auth/authSlice";
 
 const PaymentPage = () => {
     const location = useLocation();
     const { plan } = location.state || {};
-
+    const dispatch = useDispatch();
     // State để lưu thông tin đầu vào và lỗi
     const [formData, setFormData] = useState({
         email: "",
@@ -84,8 +86,9 @@ const PaymentPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validate()) {
+            dispatch(verifyPayment()); // Cập nhật trạng thái "đã thanh toán"
             alert("Form submitted successfully!");
-        }
+          }
     };
 
     return (
@@ -216,7 +219,7 @@ const PaymentPage = () => {
                                 type="submit"
                                 className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark"
                             >
-                                Register
+                                PAY
                             </button>
                         </form>
                     </>
