@@ -22,7 +22,7 @@ const ProfileLike = () => {
     }));
   }
   return (
-    <div className="flex flex-col p-4 gap-y-5">
+    <div className="flex flex-col pt-4 gap-y-5">
       {loading ? (
         <PostSkeleton></PostSkeleton>
       ) : listPost.length > 0 ? (

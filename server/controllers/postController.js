@@ -6,16 +6,20 @@ const NotifyModel = require("../models/NotifyModel");
 const PostModel = require("../models/PostModel");
 const UserModel = require("../models/UserModel");
 const removeTones = require("../utils/removeTones");
-const shuffleArray = require("../utils/shuffleArray");
 
 async function checkSavedAndLiked(listPost, username) {
   const { listSaved, _id } = username;
-  const listNewPost = listPost.map(async (post) => ({
-    ...(post._doc || post),
-    saved: listSaved.includes(post._id),
-    isLiked: post.listHeart.includes(_id),
-    commentCount: await CommentModel.find({ postID: post._id }).count(),
-  }));
+  const listNewPost = listPost.map(async (post) => {
+    const isRetweeted = await PostModel.exists({ retweetPost: post._id, authorID: _id });
+    return {
+      ...(post._doc || post),
+      saved: listSaved.includes(post._id),
+      isLiked: post.listHeart.includes(_id),
+      isRetweeted,
+      commentCount: await CommentModel.find({ postID: post._id }).count(),
+      retweetCount: await PostModel.find({ retweetPost: post._id }).count(),
+    };
+  });
   return await Promise.all(listNewPost);
 }
 
@@ -29,13 +33,12 @@ function searchListByContent(str, content) {
 const getPostList = asyncHandler(async (req, res) => {
   const username = req.username;
   try {
-    let listPost = await PostModel.find({}).populate("authorID", [
-      "_id",
-      "email",
-      "firstName",
-      "lastName",
-      "avatar",
-    ]);
+    let listPost = await PostModel.find({})
+      .populate("authorID", ["_id", "email", "firstName", "lastName", "avatar"])
+      .populate({
+        path: "retweetPost",
+        populate: { path: "authorID", select: ["_id", "firstName", "lastName", "avatar"] },
+      });
 
     const { keyword, by } = req.query;
     if (keyword) {
@@ -44,38 +47,24 @@ const getPostList = asyncHandler(async (req, res) => {
       );
     }
 
+    listPost = await checkSavedAndLiked(listPost, username);
+
     if (by === "saved") {
-      listPost = await checkSavedAndLiked(listPost, username);
       listPost = listPost.filter((post) => post.saved);
+    } else if (by === "like") {
+      listPost = listPost.sort((a, b) => b.listHeart.length - a.listHeart.length);
+    } else if (by === "comment") {
+      listPost = listPost.sort((a, b) => b.commentCount - a.commentCount);
     } else {
-      listPost = await checkSavedAndLiked(listPost, username);
-      if (by === "like") {
-        listPost = listPost.sort((a, b) =>
-          a.listHeart.length < b.listHeart.length ? 1 : -1
-        );
-      } else if (by === "comment") {
-        const newListPost = listPost.map(async (post) => {
-          const commentCount = await CommentModel.find({
-            postID: post._id,
-          }).count();
-          return { ...post._doc, commentCount };
-        });
-        listPost = (await Promise.all(newListPost)).sort((a, b) =>
-          a.commentCount < b.commentCount ? 1 : -1
-        );
-      } else {
-        listPost = listPost.sort((a, b) =>
-          a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0
-        );
-      }
+      listPost = listPost.sort((a, b) => b.createdAt - a.createdAt);
     }
+
     res.json({ listPost });
   } catch (error) {
-    const errorMsg = JSON.stringify(error);
-    res.status(500).json(errorMsg);
+    console.error(error);
+    res.status(500).json("Server error");
   }
 });
-
 
 // OK
 const getPostPersonal = asyncHandler(async (req, res) => {
@@ -90,25 +79,23 @@ const getPostPersonal = asyncHandler(async (req, res) => {
       "lastName",
       "avatar",
     ]);
+
     if (userInfo) {
       const { by } = req.query;
       let condition = {};
 
-      // Nếu by là liked, lọc theo điều kiện posts -> listHeart
       if (by === "liked") {
         condition = { listHeart: id };
       } else if (by !== "saved") {
-        condition = { authorID: id }; // Lấy tất cả bài viết (ko lọc)
+        condition = { authorID: id };
       }
 
       let listPost = await PostModel.find(condition)
-        .populate("authorID", [
-          "_id",
-          "email",
-          "firstName",
-          "lastName",
-          "avatar",
-        ])
+        .populate("authorID", ["_id", "email", "firstName", "lastName", "avatar"])
+        .populate({
+          path: "retweetPost",
+          populate: { path: "authorID", select: ["_id", "firstName", "lastName", "avatar"] },
+        })
         .sort({ createdAt: -1 });
 
       listPost = await checkSavedAndLiked(listPost, username);
@@ -125,7 +112,8 @@ const getPostPersonal = asyncHandler(async (req, res) => {
       res.json(postDetail);
     } else res.status(400).json("User invalid");
   } catch (error) {
-    res.status(500).json(error);
+    console.error(error);
+    res.status(500).json("Server error");
   }
 });
 
@@ -280,6 +268,46 @@ const handleDeletePost = asyncHandler(async (req, res) => {
   }
 });
 
+const handleRetweetPost = asyncHandler(async (req, res) => {
+  const username = req.username;
+  try {
+    const { content, retweetPostID } = req.body;
+
+    const originalPost = await PostModel.findById(retweetPostID).populate("authorID", [
+      "_id",
+      "email",
+      "firstName",
+      "lastName",
+      "avatar",
+    ]);
+
+    if (!originalPost) {
+      return res.status(404).json({ message: "Original post not found" });
+    }
+
+    const newRetweet = await PostModel.create({
+      content,
+      type: "retweet",
+      authorID: username._id,
+      retweetPost: originalPost._id,
+    });
+
+    const retweetWithDetails = await PostModel.findById(newRetweet._id)
+      .populate("authorID", ["_id", "firstName", "lastName", "avatar"])
+      .populate({
+        path: "retweetPost",
+        populate: { path: "authorID", select: ["_id", "firstName", "lastName", "avatar"] },
+      });
+
+    const retweetCount = await PostModel.find({ retweetPost: retweetPostID }).count();
+
+    res.status(201).json({ ...retweetWithDetails._doc, retweetCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error, message: "Server error" });
+  }
+});
+
 module.exports = {
   getPostList,
   getPostPersonal,
@@ -288,4 +316,5 @@ module.exports = {
   handleDeletePost,
   handleShowHeart,
   handleSavePost,
+  handleRetweetPost,
 };

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addNewPost, getPostList } from "./postRequest";
+import { addNewPost, getPostList, retweetPost } from "./postRequest";
 
 const postSlice = createSlice({
   name: "posts",
@@ -17,7 +17,6 @@ const postSlice = createSlice({
   },
   reducers: {
     setModeComment: (state, { payload }) => {
-      // eslint-disable-next-line array-callback-return
       state.getPost.listPost = state.getPost.listPost.map((post) =>
         post._id === payload
           ? { ...post, modeComment: !post.modeComment }
@@ -32,14 +31,28 @@ const postSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Retweet Post
+      .addCase(retweetPost.fulfilled, (state, { payload }) => {
+        // Bài viết retweet mới
+        state.getPost.listPost = [payload, ...state.getPost.listPost];
+        // Tìm bài viết gốc (bài viết được retweet)
+        const originalPost = state.getPost.listPost.find(
+          (post) => post._id === payload.retweetPost._id
+        );
+        if (originalPost) {
+          originalPost.retweetCount += 1;
+          originalPost.isRetweeted = true;
+        }
+      })
+      .addCase(retweetPost.rejected, (state, { payload }) => {
+        state.createPost.error = payload;
+      })
+      // Add New Post
       .addCase(addNewPost.fulfilled, (state, { payload }) => {
         state.createPost.success = true;
         state.createPost.loading = false;
-        // Fix - Get new post
-        // Thêm bài viết mới vào đầu danh sách
-        state.getPost.listPost = [payload, ...state.getPost.listPost]; 
+        state.getPost.listPost = [payload, ...state.getPost.listPost];
       })
-
       .addCase(addNewPost.pending, (state) => {
         state.createPost.loading = true;
         state.createPost.error = false;
@@ -47,8 +60,8 @@ const postSlice = createSlice({
       .addCase(addNewPost.rejected, (state) => {
         state.createPost.loading = false;
         state.createPost.error = true;
-      });
-    builder
+      })
+      // Get Post List
       .addCase(getPostList.fulfilled, (state, { payload }) => {
         state.getPost.listPost = payload;
         state.getPost.loading = false;

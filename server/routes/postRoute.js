@@ -7,6 +7,7 @@ const {
   handleSavePost,
   handleShowHeart,
   getPostPersonal,
+  handleRetweetPost, // Task-7
 } = require("../controllers/postController");
 const verifyToken = require("../middleWare/verifyToken");
 const upload = require("../utils/uploadStorage");
@@ -32,5 +33,7 @@ router.post(
 router.post("/heart/:id", verifyToken, handleShowHeart);
 
 router.delete("/:id", verifyToken, handleDeletePost);
+
+router.post("/retweet", verifyToken, handleRetweetPost); // Route mới cho retweet
 
 module.exports = router;

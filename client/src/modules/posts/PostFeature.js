@@ -1,7 +1,5 @@
 import { Avatar } from "@mui/material";
-import React from "react";
-import CollectionsIcon from "@mui/icons-material/Collections";
-import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import useToggle from "hooks/useToggle";
@@ -9,7 +7,7 @@ import PostAddNew from "modules/posts/PostAddNew";
 
 const PostFeature = ({ linkInfo, username, avatar }) => {
   const [showModal, setShowModal] = useToggle(false);
-  const [postType, setPostType] = React.useState("");
+  const [postType, setPostType] = useState("");
   const handleOpenModalPost = (type = "") => {
     if (username) {
       setShowModal(true);

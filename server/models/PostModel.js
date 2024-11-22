@@ -13,7 +13,7 @@ const PostSchema = mongoose.Schema(
     ],
     type: {
       type: String,
-      enum: ["theme", "image", "video"],
+      enum: ["theme", "image", "video", "retweet"],
       required: true,
     },
     modeComment: { type: Boolean, default: true },
@@ -21,6 +21,10 @@ const PostSchema = mongoose.Schema(
     authorID: {
       type: String,
       ref: "users",
+    },
+    retweetPost: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "posts" 
     },
   },
   { timestamps: true }
