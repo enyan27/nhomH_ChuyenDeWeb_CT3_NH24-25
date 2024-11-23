@@ -23,6 +23,8 @@ import useSnackbarInfo from "hooks/useSnackbarInfo";
 import AlertDialog from "components/alert/AlertDialog";
 import PostVideo from "./parts/PostVideo";
 import RepeatIcon from '@mui/icons-material/Repeat';
+import PostAddNew from './PostAddNew';
+import PostItemRetweet from './PostItemRetweet';
 
 const PostItem = ({ postInfo }) => {
   const { currentUser } = useSelector((state) => state.auth.login);
@@ -40,15 +42,27 @@ const PostItem = ({ postInfo }) => {
     listImg,
     listHeart,
     createdAt,
+    retweetPost,
   } = postInfo;
   const { action, handleClose, stateOpen } = useSnackbarInfo();
   const [textAlert, setTextAlert] = useState("");
-  const [like, setLike] = useToggle(isLiked);
   const [openDialog, setOpenDialog] = useState(false);
+  const [like, setLike] = useToggle(isLiked);
   const [modalComment, setModalComment] = useToggle(false);
   const [countLike, setCountLike] = useState(listHeart.length);
   const [open, setOpen] = stateOpen;
+  const [showModal, setShowModal] = useToggle(false);
+  const [postType, setPostType] = useState("");
+  const [retweetActive, setRetweetActive] = useState(postInfo.isRetweeted);
+  const [countRetweet, setCountRetweet] = useState(postInfo.retweetCount);
+
+  const handleOpenModalPost = (type = "") => {
+    setShowModal(true);
+    setPostType(type);
+  };
+
   const dispatch = useDispatch();
+
   const handleLiked = async () => {
     try {
       setLike();
@@ -64,6 +78,12 @@ const PostItem = ({ postInfo }) => {
       console.log(error);
     }
   };
+
+  const handleRetweetSuccess = () => {
+    setRetweetActive(true);
+    setCountRetweet((prev) => prev + 1);
+  };
+
   const handleModeComment = async () => {
     try {
       setTextAlert(modeComment ? "Disabled comment" : "Enabled comment");
@@ -80,6 +100,7 @@ const PostItem = ({ postInfo }) => {
       console.log(error);
     }
   };
+
   const handleDeletePost = async () => {
     try {
       setTimeout(async () => {
@@ -96,10 +117,23 @@ const PostItem = ({ postInfo }) => {
       console.log(error);
     }
   };
+
+  if (type === "retweet") {
+    return (
+      <PostItemRetweet
+        retweetPost={retweetPost}
+        originalPost={postInfo}
+        onDeletePost={() => handleDeletePost()}
+        onToggleComment={() => handleModeComment()}
+        onLikePost={() => handleLiked()}
+        isLiked={like}
+        likeCount={countLike}
+      />
+    );
+  }
+
   return (
     <>
-      {/* Fix UI - Post UI */}
-      {/* <div className="flex flex-col px-4 rounded-xl bg-whiteSoft dark:bg-darkSoft"> */}
       <div className="flex flex-col border-b border-graySoft dark:border-gray-700">
         <div className="px-4">
           <div className="flex items-start justify-between mt-5 mb-3">
@@ -118,25 +152,20 @@ const PostItem = ({ postInfo }) => {
               )}
             </div>
           </div>
-
           {type === "theme" ? (
             <PostTheme theme={theme}>{content}</PostTheme>
           ) : (
             <>
               <PostContent>{content}</PostContent>
-              {type === "image" ? (
-                <PostImage
-                  src={listImg[0]}
-                  listImg={listImg}
-                ></PostImage>
-              ) : (
-                <PostVideo src={linkVideo}></PostVideo>
+              {type === "image" && (
+                <PostImage src={listImg[0]} listImg={listImg}></PostImage>
               )}
+              {type === "video" && <PostVideo src={linkVideo}></PostVideo>}
             </>
           )}
+          {/* Nút trạng thái bài viết bình thường */}
           <div className="py-3 ">
             <div className="flex items-center gap-x-10 justify-between px-16">
-
               <PostStatus
                 hoverColor="group-hover:bg-primaryBlue group-hover:text-primaryBlue"
                 textColor="group-hover:text-primaryBlue"
@@ -151,15 +180,25 @@ const PostItem = ({ postInfo }) => {
                   <CommentsDisabledIcon className="text-xl"></CommentsDisabledIcon>
                 )}
               </PostStatus>
+              {/* Retweet */}
+              {showModal && (
+                <PostAddNew
+                  handleHideModal={setShowModal}
+                  type={postType}
+                  postToRetweet={postInfo}
+                  onRetweetSuccess={handleRetweetSuccess}
+                ></PostAddNew>
+              )}
 
               <PostStatus
                 hoverColor="group-hover:bg-retweetColor group-hover:text-retweetColor"
-                textColor="group-hover:text-retweetColor"
-                quantity={-1}
-                title="Repeat Icon"
-                className="" // Comming Soon
+                textColor={retweetActive ? "text-retweetColor" : "group-hover:text-retweetColor"}
+                quantity={countRetweet}
+                title={retweetActive ? "You've been retweeted" : "Retweet"}
+                onClick={!retweetActive ? () => handleOpenModalPost("retweet") : undefined}
+                className={retweetActive ? "cursor-not-allowed" : ""}
               >
-                <RepeatIcon className="text-xl"></RepeatIcon>
+                <RepeatIcon className={`text-xl ${retweetActive ? "text-retweetColor" : ""}`}></RepeatIcon>
               </PostStatus>
 
               <PostStatus
@@ -182,7 +221,7 @@ const PostItem = ({ postInfo }) => {
             </div>
           </div>
         </div>
-      </div> 
+      </div>
       {modalComment && (
         <CommentFeature
           modalComment={modalComment}
