@@ -21,6 +21,10 @@ import MusicPage from "views/MusicPage";
 import Settings from "views/Settings";
 import PremiumPage from "views/PremiumPage";
 import PaymentPage from "views/PaymentPage";
+import Admin from "views/Admin";
+import User from "views/User";
+import Dashboard from "views/Dashboard";
+import Posts from "views/Posts"
 
 function App() {
   return (
@@ -46,7 +50,11 @@ function App() {
           <Route path="/comming-soon" element={<CommingSoon />} />
 
         </Route>
-
+        <Route path="/admin" element={<Admin/>} />
+        <Route path="/admin/users" element={<User/>} />
+        <Route path="/admin/settings" element={<Settings/>} />
+        <Route path="/admin/dashboard" element={<Dashboard/>} />
+        <Route path="/admin/posts" element={<Posts/>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
