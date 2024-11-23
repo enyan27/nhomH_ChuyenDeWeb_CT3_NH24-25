@@ -48,7 +48,7 @@ const CommentForm = ({ postID = "", emitTyping, emitStopTyping }) => {
         minRows={3}
         placeholder="Comment your reply about this post"
         autoFocus={true}
-        className="px-4 py-3 transition-all bg-transparent border text-text2 dark:text-white rounded-xl border-strock dark:border-gray-600 focus:border-primary"
+        className="px-4 py-3 transition-all bg-transparent border text-text2 dark:text-white rounded-xl border-strock dark:border-gray-600 focus:border-primary break-all"
         {...register("content", { required: true })}
       />
       <div className="my-3 text-right">

@@ -39,11 +39,11 @@ const PostImage = ({ listImg = [] }) => {
       );
     } else if (imageCount === 3) {
       return (
-        <div className="grid grid-cols-2 gap-1">
+        <div className="grid grid-cols-2 grid-rows-2 gap-1">
           <img
             src={listImg[0]}
             onClick={() => handleImageClick(0)}
-            className="object-cover w-full h-full col-span-2 cursor-pointer"
+            className="object-cover w-full h-full row-span-2 cursor-pointer"
             alt=""
           />
           {listImg.slice(1, 3).map((img, index) => (
@@ -51,6 +51,20 @@ const PostImage = ({ listImg = [] }) => {
               key={index + 1}
               src={img}
               onClick={() => handleImageClick(index + 1)}
+              className="object-cover w-full h-full cursor-pointer"
+              alt=""
+            />
+          ))}
+        </div>
+      );
+    } else if (imageCount === 4) {
+      return (
+        <div className="grid grid-cols-2 gap-1">
+          {listImg.slice(0, 4).map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              onClick={() => handleImageClick(index)}
               className="object-cover w-full h-full cursor-pointer"
               alt=""
             />

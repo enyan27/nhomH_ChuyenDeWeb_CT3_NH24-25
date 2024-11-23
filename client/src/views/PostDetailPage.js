@@ -23,7 +23,7 @@ const PostDetail = () => {
       <BackPage turnSwitchTab={-1}>
         <h4 className="py-2 text-xl font-bold">Post detail</h4>
       </BackPage>
-      <div className="px-5 py-4">
+      <div className="py-4">
         {!loading ? (
           <>
             {listPost.map((post) => (

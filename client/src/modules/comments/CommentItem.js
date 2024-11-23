@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { socket } from "api/config";
 import { Avatar, Tooltip } from "@mui/material";
-import TextUsername from "components/text/TextUsername";
+import { Button, CircularProgress, TextareaAutosize } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Link } from "react-router-dom";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import TextUsername from "components/text/TextUsername";
 import AlertDialog from "components/alert/AlertDialog";
 import renderTime from "utils/renderTime";
 import parse from "html-react-parser";
@@ -65,7 +66,7 @@ const CommentItem = ({ comment, isAuthor = false }) => {
           </div>
 
           <div className="flex items-center justify-between mt-1">
-            <h5 className="text-[15px] font-normal text-text2 dark:text-whiteSoft">
+            <h5 className="text-[15px] font-normal text-text2 dark:text-whiteSoft break-all">
               {parse(content)}
             </h5>
             {userID?._id === currentUser?._id && (
@@ -116,7 +117,7 @@ const CommentItem = ({ comment, isAuthor = false }) => {
                     </p>
                   </div>
                   <div className="flex items-center justify-between mt-1">
-                    <p className="text-sm">{reply.content}</p>
+                    <p className="text-sm break-all">{reply.content}</p>
                     {reply.userID?._id === currentUser?._id && (
                       <Tooltip
                         className="cursor-pointer opacity-80"
@@ -143,19 +144,23 @@ const CommentItem = ({ comment, isAuthor = false }) => {
                 sx={{ width: 40, height: 40 }}
               />
             </Link>
-            <input
-              type="text"
+            <TextareaAutosize
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
               placeholder="Write a reply"
-              className="flex-1 border border-gray-300 rounded-md px-3 py-2"
+              minRows={1}
+              className="flex-1 px-4 py-3 transition-all bg-transparent border text-text2 dark:text-white rounded-xl border-strock dark:border-gray-600 focus:border-primary resize-none"
             />
-            <button
+            <Button
               onClick={handleAddReply}
-              className="text-blue-500 font-medium"
+              variant="contained"
+              disabled={!replyContent.trim()}
+              className={`w-[100px] bg-primary text-white font-semibold rounded-full py-[6px] transition-all ${
+                !replyContent.trim() ? "opacity-30 cursor-not-allowed" : ""
+              }`}
             >
               Reply
-            </button>
+            </Button>
           </div>
         </div>
       )}
