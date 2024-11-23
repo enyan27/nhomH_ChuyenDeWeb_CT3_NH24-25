@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,16 +10,49 @@ import {
   Avatar,
   Typography,
   CircularProgress,
+  TextField,
+  Button,
 } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Sidebar from "components/admin/Sidebar";
 import Header from "components/admin/Header";
 import Footer from "components/admin/Footer";
-import useFetchUsers from "hooks/useFetchUsers"; // Import hook sử dụng để tải danh sách người dùng
+import useFetchUsers from "hooks/useFetchUsers";
+import axios from "api/config"; // Import axios để gửi yêu cầu API
 import "../styles/admin.scss";
 
 const User = () => {
   const { users, loading, error } = useFetchUsers();
+  const [editingRole, setEditingRole] = useState(null);
+  const [newRole, setNewRole] = useState(null);
+
+  const handleRoleChange = async (userId, role) => {
+    try {
+      const response = await axios.patch(`/users/${userId}`, {
+        role: role === 0 ? 1 : 0, // Chuyển đổi giữa 0 và 1
+      });
+      if (response.status === 200) {
+        setNewRole(role === 0 ? 1 : 0);
+      }
+    } catch (err) {
+      console.error("Lỗi khi cập nhật quyền:", err);
+      alert("Không thể cập nhật quyền người dùng.");
+    }
+  };
+  const handleAccountStatusChange = async (userId, status) => {
+    try {
+      const response = await axios.patch(`/users/${userId}`, {
+        isBan: status === "1" ? true : false, 
+      });
+  
+      if (response.status === 200) {
+        alert("Cập nhật trạng thái tài khoản thành công!");
+      }
+    } catch (err) {
+      console.error("Lỗi khi cập nhật trạng thái tài khoản:", err);
+      alert("Không thể cập nhật trạng thái tài khoản.");
+    }
+  };
 
   return (
     <div className="admin-layout">
@@ -57,7 +90,6 @@ const User = () => {
                   {users.length > 0 ? (
                     users.map((user) => (
                       <TableRow key={user._id}>
-                        {/* Avatar */}
                         <TableCell>
                           <Avatar
                             src={user.avatar || "/uploads/default-avatar.jpg"}
@@ -66,24 +98,18 @@ const User = () => {
                           />
                         </TableCell>
 
-                        {/* Tên người dùng */}
                         <TableCell>
                           {user.firstName} {user.lastName}
                         </TableCell>
 
-                        {/* Email */}
                         <TableCell>{user.email}</TableCell>
 
-                        {/* Giới tính */}
                         <TableCell>{user.gender === "male" ? "Nam" : "Nữ"}</TableCell>
 
-                        {/* Trạng thái hoạt động */}
                         <TableCell>{user.isActive ? "Hoạt động" : "Không hoạt động"}</TableCell>
 
-                        {/* Ngày tạo */}
                         <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
 
-                        {/* Ảnh bìa */}
                         <TableCell>
                           <img
                             src={user.coverImg || "/uploads/cover-image-default.jpg"}
@@ -92,13 +118,41 @@ const User = () => {
                           />
                         </TableCell>
 
-                        {/* Quyền */}
-                        <TableCell>{user.role || "Chưa xác định"}</TableCell>
+                        {/* Cột Quyền với khả năng sửa trực tiếp */}
+                        <TableCell>
+                          <TextField
+                            select
+                            value={user.role === 0 ? 0 : 1}
+                            onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                            variant="outlined"
+                            size="small"
+                            SelectProps={{
+                              native: true,
+                            }}
+                          >
+                            <option value={0}>User</option>
+                            <option value={1}>Admin</option>
+                          </TextField>
+                        </TableCell>
 
-                        {/* Trạng thái bị khóa */}
-                        <TableCell>{user.isBan ? "Bị khóa" : "Hoạt động"}</TableCell>
+                        <TableCell>
+                          <TextField
+                            select
+                            value={user.isBan ? 1 : 0}
+                            onChange={(e) => handleAccountStatusChange(user._id, e.target.value)}
+                            variant="outlined"
+                            size="small"
+                            SelectProps={{
+                              native: true,
+                            }}
+                          >
+                            <option value={0}>Hoạt động</option>
+                            <option value={1}>Khóa</option>
+                          </TextField>
+                        </TableCell>
 
-                        {/* Số bài viết đã lưu */}
+
+
                         <TableCell>{user.listSaved.length || 0}</TableCell>
                       </TableRow>
                     ))

@@ -23,7 +23,6 @@ import "../styles/admin.scss";
 const Post = () => {
   const { posts, loading, error } = useFetchPosts();
 
-  // State quản lý hình ảnh hiển thị
   const [open, setOpen] = useState(false);
   const [currentImages, setCurrentImages] = useState([]);
 
@@ -98,7 +97,7 @@ const Post = () => {
                         <TableCell>
                           {post.listImg?.length > 0 ? (
                             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                              {post.listImg.slice(0, 3).map((img, index) => (
+                              {post.listImg.slice(0, 4).map((img, index) => (
                                 <img
                                   key={index}
                                   src={img}
@@ -111,14 +110,14 @@ const Post = () => {
                                   }}
                                 />
                               ))}
-                              {post.listImg.length > 3 && (
+                              {post.listImg.length > 4 && (
                                 <Typography
                                   variant="caption"
                                   color="textSecondary"
                                   style={{ cursor: "pointer" }}
                                   onClick={() => handleOpenDialog(post.listImg)}
                                 >
-                                  +{post.listImg.length - 3} hình
+                                  +{post.listImg.length - 4} hình
                                 </Typography>
                               )}
                             </div>

@@ -29,6 +29,14 @@ const UserSchema = mongoose.Schema(
       default: false,
     },
     searchHistory: [String],
+    role: {
+      type: Number,
+      default: 0,
+    },
+    isBan: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 );
