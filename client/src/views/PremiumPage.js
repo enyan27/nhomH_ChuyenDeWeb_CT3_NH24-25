@@ -19,6 +19,7 @@ const PremiumPage = () => {
                 "Edit posts",
                 "Post longer videos",
                 "Longer posts",
+                "Checkmark",
             ],
         },
         {
