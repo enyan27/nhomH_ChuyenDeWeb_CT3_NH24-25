@@ -1,0 +1,64 @@
+// Biến màu sắc
+$primary-color: #e5e7eb;
+$secondary-color: #e5e7eb;
+$text-color: rgb(75 82 100 / 1);
+$background-color: #ecf0f1;
+$content-background: #ffffff;
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+
+  .sidebar {
+    width: 250px;
+    background-color: $primary-color;
+    color: $text-color;
+    padding: 20px;
+
+    .menu-item {
+      margin: 15px 0;
+      font-size: 16px;
+      color: $text-color;
+      text-decoration: none;
+      display: block;
+
+      &:hover {
+        color: lighten($text-color, 10%);
+      }
+    }
+  }
+
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+      background-color: $secondary-color;
+      color: $text-color;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+
+      .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      background-color: $background-color;
+    }
+
+    .footer {
+      background-color: $secondary-color;
+      color: $text-color;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+  }
+}
