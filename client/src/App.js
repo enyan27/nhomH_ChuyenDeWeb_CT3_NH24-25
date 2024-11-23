@@ -20,6 +20,10 @@ import ForgotPasswordPage from "views/ForgotPasswordPage";
 import MusicPage from "views/MusicPage";
 import Settings from "views/Settings";
 
+import AdminMusic from "views/AdminMusic";
+import MusicList from "views/MusicList";
+
+
 
 function App() {
   return (
@@ -43,6 +47,10 @@ function App() {
           <Route path="/comming-soon" element={<CommingSoon />} />
 
         </Route>
+       
+        <Route path="/admin/music" element={<AdminMusic/>} />
+        <Route path="/admin/list" element={<MusicList />} />
+        
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

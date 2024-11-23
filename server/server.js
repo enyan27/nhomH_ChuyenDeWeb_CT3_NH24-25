@@ -9,6 +9,7 @@ const chatsHandler = require("./socket_io/chatsHandler");
 const commentHandler = require("./socket_io/commentHandler");
 const notifyHandler = require("./socket_io/notifyHandler");
 const userHandler = require("./socket_io/userHandler");
+const musicHandler = require("./socket_io/musicHandler");
 
 
 const app = express();
@@ -21,7 +22,7 @@ const io = socketIO(server, {
 
 /* Configuration */
 app.use(cors({ origin: [process.env.URL_CLIENT] }));
-// app.use("/public", express.static(path.join(__dirname, "./public")));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
@@ -34,6 +35,7 @@ app.use("/api/posts", require("./routes/postRoute"));
 app.use("/api/comments", require("./routes/commentRoute"));
 app.use("/api/chats", require("./routes/chatRoute"));
 app.use("/api/notify", require("./routes/notifyRoute"));
+app.use("/api/music", require("./routes/musicRoute")); 
 
 /* Socket handler */
 io.on("connection", (socket) => {
@@ -44,6 +46,10 @@ io.on("connection", (socket) => {
   commentHandler(socket, io);
 
   notifyHandler(socket, io);
+
+  musicHandler(socket,io);
+
+
 
   socket.on("disconnect", async (reason) => {
     console.log("User disconnected because " + reason);
