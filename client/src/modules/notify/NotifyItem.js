@@ -37,7 +37,7 @@ const NotifyItem = ({ postID = "", userInfo = {}, notifyInfo = {} }) => {
           onClick={handleSeenNotify}
           className={`flex items-center justify-between p-3 gap-x-3`}
         >
-          <div className="flex items-start gap-x-2">
+          <div className="flex items-start gap-x-2 break-all">
             <PictureAvatarBig
               avatar={userInfo?.avatar}
               size={60}

@@ -134,7 +134,7 @@ const PostItem = ({ postInfo }) => {
 
   return (
     <>
-      <div className="flex flex-col border-b border-graySoft dark:border-gray-700">
+      <div className="flex flex-col border-b border-graySoft dark:border-gray-700 break-all">
         <div className="px-4">
           <div className="flex items-start justify-between mt-5 mb-3">
             <PostMeta timer={renderTime(createdAt)} author={authorID}></PostMeta>
