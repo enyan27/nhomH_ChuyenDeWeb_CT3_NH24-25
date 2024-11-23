@@ -16,8 +16,6 @@ const PremiumPage = () => {
             features: [
                 "Small reply boost",
                 "Encrypted direct messages",
-                "Bookmark folders",
-                "Highlights tab",
                 "Edit posts",
                 "Post longer videos",
                 "Longer posts",
@@ -34,9 +32,6 @@ const PremiumPage = () => {
                 "Larger reply boost",
                 "Get paid to post",
                 "Checkmark",
-                "AI Assistant",
-                "Analytics & Media Studio",
-                "Creator subscriptions",
             ],
         },
         {
@@ -48,8 +43,7 @@ const PremiumPage = () => {
                 "Everything in Premium",
                 "Fully ad-free",
                 "Largest reply boost",
-                "Write articles",
-                "Radar",
+                "Checkmark",
             ],
         },
     ];
