@@ -7,8 +7,8 @@ const authSlice = createSlice({
     login: {
       currentUser: null,
       isLoading: false,
-      
-      isVerified: false,
+
+      isPremium: false,
     },
     register: { isLoading: false, success: false },
   },
@@ -23,7 +23,7 @@ const authSlice = createSlice({
       state.register.success = false;
     },
     verifyPayment: (state) => {
-      state.login.isVerified = true; // Cập nhật trạng thái "đã thanh toán"
+      state.login.isPremium = true; // Cập nhật trạng thái "đã thanh toán"
     },
   },
   extraReducers: (builder) => {

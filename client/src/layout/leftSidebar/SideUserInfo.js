@@ -26,7 +26,7 @@ const SideUserInfo = ({
   const [modalPassword, setModalPassword] = useToggle(false);
 
   // Lấy trạng thái từ Redux
-  const { currentUser, isVerified } = useSelector((state) => state.auth.login);
+  const { currentUser, isPremium } = useSelector((state) => state.auth.login);
 
   const handleLogout = () => {
     logoutUser(dispatch);
@@ -54,8 +54,8 @@ const SideUserInfo = ({
                 {username.length > 10
                   ? username.slice(0, 14) + "..."
                   : username}
-                {/* Hiển thị icon tích đen nếu isVerified = true */}
-                {isVerified && (
+                {/* Hiển thị icon tích đen nếu isPremium = true */}
+                {isPremium && (
                   <VerifiedIcon
                     className="text-xl text-primary ml-2"
                     titleAccess="Author"
