@@ -44,7 +44,7 @@ const PostItemRetweet = ({
     };
 
     return (
-        <div className="flex flex-col border-b border-graySoft dark:border-gray-700">
+        <div className="flex flex-col border-b border-graySoft dark:border-gray-700 break-all">
             {/* Header */}
             <div className="px-12 pt-1">
                 <RepeatIcon className="text-xl text-text4 mr-0.5"></RepeatIcon>

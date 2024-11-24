@@ -15,8 +15,13 @@ export const loginUser = createAsyncThunk(
         expires: 30,
         path: "/",
       });
-      navigate("/home");
-      return res.data;
+      if (res.data.role == 1) {
+        navigate("/admin");
+      }else{
+        navigate("/home");
+      }
+      console.log(res.data.role);
+      return res.data;      
     } catch (error) {
       if (error.response.status === 400) {
         setError("email", { message: "" });

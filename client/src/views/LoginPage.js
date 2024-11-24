@@ -38,8 +38,22 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.auth.login);
   const handleLogin = (values) => {
-    dispatch(loginUser({ userData: values, reset, setError, navigate }));
+    dispatch(
+      loginUser({
+        userData: values,
+        reset,
+        setError,
+        navigate,
+      })
+    ).then(res => {
+      if (res.data.role == 1) {
+        navigate("/admin");
+      }else{
+        navigate("/home");
+      }
+    });    
   };
+
   return (
     <Authentication heading="Log in">
       <form

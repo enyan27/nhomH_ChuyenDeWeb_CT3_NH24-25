@@ -20,11 +20,12 @@ import ProfileLoading from "modules/profile/ProfileLoading";
 import PictureDialog from "components/picture/PictureDialog";
 import useBackdropPicture from "hooks/useBackropPicture";
 import { resetProfile } from "redux/users/userSlice";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 const listTab = [ "posts", "replies","highlights", "media", "friends", "likes"];
 
 const PersonalPage = () => {
-  const { currentUser } = useSelector((state) => state.auth.login);
+  const { currentUser,isPremium  } = useSelector((state) => state.auth.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -88,7 +89,15 @@ const PersonalPage = () => {
               chatID={userInfo?.chatID}
             ></ProfileFeature>
             <div className="flex flex-col mt-6">
-              <TextHeading>{fullName}</TextHeading>
+              <div className="flex items-center">
+                <TextHeading>{fullName}</TextHeading>
+                {isPremium && (
+                  <VerifiedIcon
+                    className="text-primary text-xl ml-2"
+                    titleAccess="Verified"
+                  />
+                )}
+              </div>
               <TextLight>{userInfo?.email}</TextLight>
               <ProfileGeneral
                 dateJoin={userInfo?.createdAt}

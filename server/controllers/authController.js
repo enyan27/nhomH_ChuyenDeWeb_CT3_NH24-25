@@ -37,23 +37,39 @@ const handleLogin = asyncHandler(async (req, res) => {
 
     if (username) {
       const result = await bcrypt.compare(req.body.password, username.password);
+
       if (result) {
-        const { _id, email, firstName, lastName, avatar } = username._doc;
+        const { _id, email, firstName, lastName, avatar, role } = username._doc;
+
         const token = generateToken({ _id });
+
         res.cookie("tokens", token, {
           httpOnly: true,
           secure: false,
           path: "/",
           sameSite: "strict",
         });
-        res.json({ _id, firstName, lastName, email, avatar, token });
-      } else res.sendStatus(400);
-    } else res.sendStatus(400);
+
+        res.json({
+          _id,
+          firstName,
+          lastName,
+          email,
+          avatar,
+          token,
+          role,
+        });        
+      } else {
+        res.status(400).json({ message: "Sai mật khẩu" });
+      }
+    } else {
+      res.status(400).json({ message: "Email không tồn tại" });
+    }
   } catch (error) {
-    res.status(500);
-    throw new Error(error);
+    res.status(500).json({ message: "Lỗi server", error: error.message });
   }
 });
+
 
 const handleChangePassword = asyncHandler(async (req, res) => {
   const username = req.username;

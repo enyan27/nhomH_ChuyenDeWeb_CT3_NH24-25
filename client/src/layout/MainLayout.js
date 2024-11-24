@@ -100,7 +100,7 @@ const MainLayout = () => {
             </SideUserInfo>
           </div>
         </div>
-        <div className="flex-[2.5] border-b border-x border-graySoft dark:border-gray-700 min-h-screen">
+        <div className="flex-[2.5] border-b border-x border-graySoft dark:border-gray-700 min-h-screen break-all">
           <Outlet></Outlet>
         </div>
 
@@ -116,11 +116,11 @@ const MainLayout = () => {
 const RightContainer = ({ path }) => {
   switch (path) {
     // Temp UI
-    // case "/friends":
-    //   return <SideFriend></SideFriend>;
+    case "/friends":
+      return <SideFriend></SideFriend>;
 
-    // case "/search":
-    //   return <SideFilter></SideFilter>;
+    case "/search":
+      return <SideFilter></SideFilter>;
 
     default:
       return <SideContact></SideContact>;

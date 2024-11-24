@@ -20,7 +20,7 @@ const useFetchUsers = () => {
           : {};
 
         const response = await axios.get("/users", config);
-        setUsers(response.data.listUser || []); // `listUser` là danh sách người dùng trả về từ API
+        setUsers(response.data.listUser || []);
       } catch (err) {
         console.error("Lỗi khi tải danh sách người dùng:", err);
         setError("Không thể tải danh sách người dùng.");

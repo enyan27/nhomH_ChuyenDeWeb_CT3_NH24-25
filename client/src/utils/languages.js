@@ -13,6 +13,7 @@ const languages = {
         notifications: "Notifications",
         messages: "Messages",
         music: "Music",
+        premium: "Premium",
         settings: "Settings",
         more: "More",
 
@@ -46,6 +47,7 @@ const languages = {
         notifications: "Thông báo",
         messages: "Nhắn tin",
         music: "Âm nhạc",
+        premium: "Cao cấp", 
         settings: "Cài đặt",
         more: "Thêm",
 
@@ -79,6 +81,7 @@ const languages = {
         notifications: "通知",
         messages: "メッセージ",
         music: "音楽",
+        premium: "プレミアム",
         settings: "設定",
         more: "もっと",
 

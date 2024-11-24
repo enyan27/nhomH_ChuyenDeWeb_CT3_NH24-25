@@ -24,6 +24,8 @@ import User from "views/User";
 import Dashboard from "views/Dashboard";
 import Posts from "views/Posts"
 
+import PremiumPage from "views/PremiumPage";
+import PaymentPage from "views/PaymentPage";
 
 function App() {
   return (
@@ -41,11 +43,12 @@ function App() {
           <Route path="/post-saved" element={<SavedPage />} />
           <Route path="/chats" element={<ChatPage />} />
           <Route path="/music" element={<MusicPage />} />
+          <Route path="/premium" element={<PremiumPage />} />
+          <Route path="/payment" element={<PaymentPage />} />
           <Route path="/chats/t/:id" element={<MessagePage />} />
           <Route path="/search" element={<FilterPage></FilterPage>}></Route>
           <Route path="/settings" element={<Settings></Settings>}></Route>
           <Route path="/comming-soon" element={<CommingSoon />} />
-
         </Route>
         <Route path="/admin" element={<Admin/>} />
         <Route path="/admin/users" element={<User/>} />

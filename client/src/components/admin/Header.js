@@ -1,25 +1,18 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Thay useHistory bằng useNavigate
-import Cookies from 'js-cookie'; // Để thao tác với cookie
-import axios from 'axios'; // Để gửi yêu cầu API
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "redux/auth/authRequest";
+import { socket } from "api/config";
 
 function Header() {
-  const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng trang
+  const dispatch = useDispatch();
 
-  const handleLogout = async () => {
-    try {
-      // Gửi yêu cầu POST để đăng xuất
-      await axios.post('/api/logout');
+  const { currentUser} = useSelector((state) => state.auth.login);
 
-      // Xóa cookie chứa token
-      Cookies.remove('tokens');
-
-      // Điều hướng người dùng về trang đăng nhập
-      navigate('/login');
-    } catch (error) {
-      console.error('Lỗi khi đăng xuất:', error);
-    }
+  const handleLogout = () => {
+    logoutUser(dispatch);
+    socket.emit("logout-active", currentUser);
   };
+
 
   return (
     <header className="header">
