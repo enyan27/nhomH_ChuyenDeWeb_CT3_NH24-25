@@ -7,6 +7,7 @@ const {
   handleDeleteImage,
   handleSearchHistory,
   handleRemoveSearch,
+  deleteUser
 } = require("../controllers/userController");
 const { handleAccountStatusChange } = require("../controllers/userController");
 
@@ -29,5 +30,7 @@ router.put(
 router.delete("/image/:id", verifyToken, handleDeleteImage);
 
 router.patch("/:id/status", verifyToken, handleAccountStatusChange);
+
+router.delete("/delete/:id", deleteUser);
 
 module.exports = router;

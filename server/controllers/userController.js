@@ -262,6 +262,26 @@ const handleUpdateInfo = asyncHandler(async (req, res) => {
   }
 });
 
+const deleteUser = asyncHandler(async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    // Tìm người dùng theo ID
+    const user = await UserModel.findById(userId); // Đảm bảo gọi đúng model "User"
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại." });
+    }
+
+    // Thực hiện xóa người dùng
+    await UserModel.findByIdAndDelete(userId);
+
+    res.status(200).json({ message: "Xóa người dùng thành công." });
+  } catch (error) {
+    console.error("Lỗi khi xóa người dùng:", error);
+    res.status(500).json({ message: "Đã xảy ra lỗi khi xóa người dùng." });
+  }
+});
+
 module.exports = {
   getUserList,
   getUserDetail,
@@ -270,4 +290,5 @@ module.exports = {
   handleSearchHistory,
   handleRemoveSearch,
   handleAccountStatusChange,
+  deleteUser,
 };

@@ -11,7 +11,7 @@ import {
   Typography,
   CircularProgress,
   TextField,
-  Button,
+  IconButton,
 } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Sidebar from "components/admin/Sidebar";
@@ -21,6 +21,7 @@ import useFetchUsers from "hooks/useFetchUsers";
 import axios from "api/config";
 import "../styles/admin.scss";
 import Cookies from "js-cookie";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const User = () => {
   const { users, loading, error, updateUser } = useFetchUsers();
@@ -30,7 +31,7 @@ const User = () => {
   const handleAccountStatusChange = async (userId, status) => {
     const token = Cookies.get("tokens");
     console.log("Token:", token);
-  
+
     try {
       const response = await axios.patch(
         `/users/${userId}/status`,
@@ -41,7 +42,7 @@ const User = () => {
           },
         }
       );
-  
+
       if (response.status === 200) {
         updateUser(userId, { isBan: status === "1" });
         alert("Cập nhật trạng thái tài khoản thành công!");
@@ -51,7 +52,7 @@ const User = () => {
       alert("Không thể cập nhật trạng thái tài khoản.");
     }
   };
-  
+
   const handleRoleChange = async (userId, role) => {
     try {
       const response = await axios.patch(`/users/${userId}`, {
@@ -66,6 +67,25 @@ const User = () => {
       alert("Không thể cập nhật quyền người dùng.");
     }
   };
+
+  const handleDeleteUser = async (userId) => {
+    const confirmDelete = window.confirm("Bạn có chắc muốn xóa người dùng này không?");
+    if (!confirmDelete) return;
+  
+    try {
+      const token = Cookies.get("tokens");
+      await axios.delete(`/users/delete/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      alert("Xóa người dùng thành công!");
+      window.location.reload();
+    } catch (err) {
+      console.error("Lỗi khi xóa người dùng:", err);
+      alert("Không thể xóa người dùng.");
+    }
+  };  
 
   return (
     <div className="admin-layout">
@@ -97,6 +117,7 @@ const User = () => {
                     <TableCell>Quyền</TableCell>
                     <TableCell>Trạng thái tài khoản</TableCell>
                     <TableCell>Số bài viết đã lưu</TableCell>
+                    <TableCell>Thao tác</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -162,10 +183,15 @@ const User = () => {
                             <option value={1}>Khóa</option>
                           </TextField>
                         </TableCell>
-
-
-
                         <TableCell>{user.listSaved.length || 0}</TableCell>
+                        <TableCell>
+                          <IconButton
+                            color="error"
+                            onClick={() => handleDeleteUser(user._id)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (

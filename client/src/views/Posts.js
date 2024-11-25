@@ -12,15 +12,15 @@ import {
   CircularProgress,
   Dialog,
   DialogContent,
-  IconButton,  // Import IconButton
+  IconButton,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";  // Import DeleteIcon
+import DeleteIcon from "@mui/icons-material/Delete";
 import Alert from "@mui/material/Alert";
 import Sidebar from "components/admin/Sidebar";
 import Header from "components/admin/Header";
 import Footer from "components/admin/Footer";
 import useFetchPosts from "hooks/useFetchPosts";
-import axios from "api/config";  // Import axios
+import axios from "api/config";
 import "../styles/admin.scss";
 import Cookies from "js-cookie";
 
