@@ -6,6 +6,7 @@ const NotifyModel = require("../models/NotifyModel");
 const PostModel = require("../models/PostModel");
 const UserModel = require("../models/UserModel");
 const removeTones = require("../utils/removeTones");
+const mongoose = require('mongoose');
 
 async function checkSavedAndLiked(listPost, username) {
   const { listSaved, _id } = username;
@@ -41,8 +42,6 @@ const deletePost = async (req, res) => {
     if (!post) {
       return res.status(404).json({ error: "Bài viết không tồn tại." });
     }
-    console.log("Post Id lấy từ fe: ".postId);
-    
     await PostModel.findByIdAndDelete(postId);
     return res.status(200).json({ message: "Bài viết đã được xóa thành công." });
   } catch (err) {

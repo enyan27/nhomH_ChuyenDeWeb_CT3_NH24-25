@@ -46,7 +46,7 @@ const Post = () => {
     try {
       const token = Cookies.get("tokens");
   
-      const response = await axios.delete(`/posts/${postId}`, {
+      const response = await axios.delete(`/posts/delete/${postId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

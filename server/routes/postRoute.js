@@ -37,7 +37,6 @@ router.delete("/:id", verifyToken, handleDeletePost);
 
 router.post("/retweet", verifyToken, handleRetweetPost); // Route mới cho retweet
 
-router.delete("/:id", deletePost);
-
+router.delete("/delete/:id", deletePost);
 
 module.exports = router;
