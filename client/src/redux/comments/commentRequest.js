@@ -63,3 +63,22 @@ export const addReplyToComment = createAsyncThunk(
     }
   }
 );
+export const editComment = createAsyncThunk(
+  "comments/edit",
+  async ({ commentId, content }, { rejectWithValue }) => {
+    try {
+      const res = await axios.patch(
+        `/comments/${commentId}`,
+        { content: convertLineBreak(content) },
+        {
+          headers: {
+            authorization: "Bearer " + Cookies.get("tokens"),
+          },
+        }
+      );
+      return { commentId, content: res.data.updatedContent }; // giả định API trả về nội dung cập nhật
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);

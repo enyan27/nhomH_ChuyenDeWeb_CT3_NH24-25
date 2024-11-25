@@ -117,4 +117,27 @@ module.exports = function commentHandler(socket, io) {
       socket.emit("error", err.message);
     }
   });
+  socket.on("editComment", async ({ commentId, content }) => {
+    const currentUser = getCurrentUser(socket.id)[0];
+    try {
+      // Tìm bình luận cần sửa
+      const comment = await CommentModel.findById(commentId);
+      if (!comment) return socket.emit("error", "Comment not found");
+  
+      // Kiểm tra xem người dùng hiện tại có phải là người đã đăng bình luận hay không
+      if (comment.userID.toString() !== currentUser.user.toString()) {
+        return socket.emit("error", "Authorization error: Cannot edit this comment");
+      }
+  
+      // Nếu đúng người dùng, tiến hành chỉnh sửa
+      comment.content = content;
+      comment.updatedAt = new Date(); // Cập nhật `updatedAt`
+      await comment.save();
+  
+      // Phát sự kiện chỉnh sửa đến tất cả các client trong phòng post
+      io.to(currentUser.post).emit("commentUpdated", { commentId, content, updatedAt: comment.updatedAt });
+    } catch (err) {
+      socket.emit("error", err);
+    }
+  });
 };
