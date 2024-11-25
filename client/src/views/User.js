@@ -18,34 +18,32 @@ import Sidebar from "components/admin/Sidebar";
 import Header from "components/admin/Header";
 import Footer from "components/admin/Footer";
 import useFetchUsers from "hooks/useFetchUsers";
-import axios from "api/config"; // Import axios để gửi yêu cầu API
+import axios from "api/config";
 import "../styles/admin.scss";
+import Cookies from "js-cookie";
 
 const User = () => {
-  const { users, loading, error } = useFetchUsers();
+  const { users, loading, error, updateUser } = useFetchUsers();
   const [editingRole, setEditingRole] = useState(null);
   const [newRole, setNewRole] = useState(null);
 
-  const handleRoleChange = async (userId, role) => {
-    try {
-      const response = await axios.patch(`/users/${userId}`, {
-        role: role === 0 ? 1 : 0, // Chuyển đổi giữa 0 và 1
-      });
-      if (response.status === 200) {
-        setNewRole(role === 0 ? 1 : 0);
-      }
-    } catch (err) {
-      console.error("Lỗi khi cập nhật quyền:", err);
-      alert("Không thể cập nhật quyền người dùng.");
-    }
-  };
   const handleAccountStatusChange = async (userId, status) => {
+    const token = Cookies.get("tokens");
+    console.log("Token:", token);
+  
     try {
-      const response = await axios.patch(`/users/${userId}`, {
-        isBan: status === "1" ? true : false, 
-      });
+      const response = await axios.patch(
+        `/users/${userId}/status`,
+        { isBan: status === "1" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
   
       if (response.status === 200) {
+        updateUser(userId, { isBan: status === "1" });
         alert("Cập nhật trạng thái tài khoản thành công!");
       }
     } catch (err) {
@@ -53,6 +51,23 @@ const User = () => {
       alert("Không thể cập nhật trạng thái tài khoản.");
     }
   };
+  
+  const handleRoleChange = async (userId, role) => {
+    try {
+      const response = await axios.patch(`/users/${userId}`, {
+        role: parseInt(role, 10),
+      });
+      if (response.status === 200) {
+        updateUser(userId, { role: parseInt(role, 10) });
+        alert("Cập nhật quyền thành công!");
+      }
+    } catch (err) {
+      console.error("Lỗi khi cập nhật quyền người dùng:", err);
+      alert("Không thể cập nhật quyền người dùng.");
+    }
+  };
+
+
 
   return (
     <div className="admin-layout">
@@ -118,7 +133,6 @@ const User = () => {
                           />
                         </TableCell>
 
-                        {/* Cột Quyền với khả năng sửa trực tiếp */}
                         <TableCell>
                           <TextField
                             select

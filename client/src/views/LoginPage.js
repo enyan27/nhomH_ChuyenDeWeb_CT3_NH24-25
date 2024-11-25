@@ -37,6 +37,7 @@ const LoginPage = () => {
   });
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.auth.login);
+
   const handleLogin = (values) => {
     dispatch(
       loginUser({
@@ -45,15 +46,26 @@ const LoginPage = () => {
         setError,
         navigate,
       })
-    ).then(res => {
-      if (res.data.role == 1) {
-        navigate("/admin");
-      }else{
-        navigate("/home");
+    ).then((res) => {
+      if (res?.data) {
+        const { role } = res.data;
+  
+        console.log("Role từ backend:", role);
+  
+        localStorage.setItem("role", role);
+  
+        if (role == 1) {
+          navigate("/admin");
+        } else {
+          navigate("/home");
+        }
+      } else {
+        console.error("Không nhận được role từ backend");
       }
-    });    
+    });
   };
-
+  
+  
   return (
     <Authentication heading="Log in">
       <form

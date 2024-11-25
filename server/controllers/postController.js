@@ -29,6 +29,28 @@ function searchListByContent(str, content) {
   );
 }
 
+const deletePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      return res.status(400).json({ error: "ID bài viết không hợp lệ." });
+    }
+
+    const post = await PostModel.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Bài viết không tồn tại." });
+    }
+    console.log("Post Id lấy từ fe: ".postId);
+    
+    await PostModel.findByIdAndDelete(postId);
+    return res.status(200).json({ message: "Bài viết đã được xóa thành công." });
+  } catch (err) {
+    console.error("Lỗi server:", err);
+    return res.status(500).json({ error: "Lỗi server khi xóa bài viết." });
+  }
+};
+
 // OK
 const getPostList = asyncHandler(async (req, res) => {
   const username = req.username;
@@ -317,4 +339,5 @@ module.exports = {
   handleShowHeart,
   handleSavePost,
   handleRetweetPost,
+  deletePost
 };

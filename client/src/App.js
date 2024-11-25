@@ -26,6 +26,7 @@ import Posts from "views/Posts"
 
 import PremiumPage from "views/PremiumPage";
 import PaymentPage from "views/PaymentPage";
+import ProtectedRoute from "components/admin/ProtectedRoute";
 
 function App() {
   return (
@@ -50,11 +51,30 @@ function App() {
           <Route path="/settings" element={<Settings></Settings>}></Route>
           <Route path="/comming-soon" element={<CommingSoon />} />
         </Route>
-        <Route path="/admin" element={<Admin/>} />
-        <Route path="/admin/users" element={<User/>} />
-        <Route path="/admin/settings" element={<Settings/>} />
-        <Route path="/admin/dashboard" element={<Dashboard/>} />
-        <Route path="/admin/posts" element={<Posts/>} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requiredRole="1">
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute requiredRole="1">
+              <User />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/posts"
+          element={
+            <ProtectedRoute requiredRole="1">
+              <Posts />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>

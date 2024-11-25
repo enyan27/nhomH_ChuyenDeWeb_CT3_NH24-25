@@ -165,6 +165,31 @@ const handleRemoveSearch = asyncHandler(async (req, res) => {
   }
 });
 
+const handleAccountStatusChange = asyncHandler(async (req, res) => {
+    try {
+    const { id } = req.params;
+    const { status } = req.body;    
+
+    if (req.user.role !== 1) {
+      return res.status(403).json({ message: "Bạn không có quyền thay đổi trạng thái tài khoản" });
+    }
+
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại" });
+    }
+
+    user.status = status;
+    await user.save();
+
+    res.json({ message: "Cập nhật trạng thái tài khoản thành công", user });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi server khi thay đổi trạng thái", error });
+  }
+});
+
+
+
 const handleDeleteImage = asyncHandler(async (req, res) => {
   const username = req.username;
   try {
@@ -242,4 +267,5 @@ module.exports = {
   handleDeleteImage,
   handleSearchHistory,
   handleRemoveSearch,
+  handleAccountStatusChange,
 };

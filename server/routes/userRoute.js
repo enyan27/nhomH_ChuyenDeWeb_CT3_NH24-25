@@ -8,16 +8,15 @@ const {
   handleSearchHistory,
   handleRemoveSearch,
 } = require("../controllers/userController");
+const { handleAccountStatusChange } = require("../controllers/userController");
+
 const verifyToken = require("../middleWare/verifyToken");
+const verifyAdmin = require("../middleWare/verifyAdmin");
 
 router.get("/", verifyToken, getUserList);
-
 router.get("/:id", verifyToken, getUserDetail);
-
 router.post("/search", verifyToken, handleSearchHistory);
-
 router.delete("/search/:slug", verifyToken, handleRemoveSearch);
-
 router.put(
   "/update-info",
   verifyToken,
@@ -27,7 +26,8 @@ router.put(
   ]),
   handleUpdateInfo
 );
-
 router.delete("/image/:id", verifyToken, handleDeleteImage);
+
+router.patch("/:id/status", verifyToken, verifyAdmin, handleAccountStatusChange);
 
 module.exports = router;

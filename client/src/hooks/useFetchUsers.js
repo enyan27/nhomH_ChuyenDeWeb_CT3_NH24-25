@@ -32,7 +32,19 @@ const useFetchUsers = () => {
     fetchUsers();
   }, []);
 
-  return { users, loading, error };
+  /**
+   * @param {string} userId
+   * @param {object} updatedData
+   */
+  const updateUser = (userId, updatedData) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user._id === userId ? { ...user, ...updatedData } : user
+      )
+    );
+  };
+
+  return { users, loading, error, updateUser };
 };
 
 export default useFetchUsers;

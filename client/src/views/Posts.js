@@ -12,17 +12,20 @@ import {
   CircularProgress,
   Dialog,
   DialogContent,
+  IconButton,  // Import IconButton
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";  // Import DeleteIcon
 import Alert from "@mui/material/Alert";
 import Sidebar from "components/admin/Sidebar";
 import Header from "components/admin/Header";
 import Footer from "components/admin/Footer";
 import useFetchPosts from "hooks/useFetchPosts";
+import axios from "api/config";  // Import axios
 import "../styles/admin.scss";
+import Cookies from "js-cookie";
 
 const Post = () => {
   const { posts, loading, error } = useFetchPosts();
-
   const [open, setOpen] = useState(false);
   const [currentImages, setCurrentImages] = useState([]);
 
@@ -35,6 +38,35 @@ const Post = () => {
     setOpen(false);
     setCurrentImages([]);
   };
+
+  const handleDeletePost = async (postId) => {
+    const isConfirmed = window.confirm("Bạn có chắc chắn muốn xóa bài viết này?");
+    if (!isConfirmed) return;
+  
+    try {
+      const token = Cookies.get("tokens");
+  
+      const response = await axios.delete(`/posts/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (response.status === 200) {
+        alert("Bài viết đã được xóa!");
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error("Lỗi khi xóa bài viết:", err);
+      if (err.response && err.response.status === 404) {
+        alert("Bài viết không tồn tại.");
+      } else {
+        alert("Không thể xóa bài viết.");
+      }
+    }
+  };
+  
+  
 
   return (
     <div className="admin-layout">
@@ -65,6 +97,7 @@ const Post = () => {
                     <TableCell><b>Video</b></TableCell>
                     <TableCell><b>Bài viết được retweet</b></TableCell>
                     <TableCell><b>Ngày tạo</b></TableCell>
+                    <TableCell><b>Thao tác</b></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -161,11 +194,20 @@ const Post = () => {
                         <TableCell>
                           {new Date(post.createdAt).toLocaleDateString()}
                         </TableCell>
+
+                        <TableCell>
+                          <IconButton
+                            color="error"
+                            onClick={() => handleDeletePost(post._id)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={9} align="center">
+                      <TableCell colSpan={10} align="center">
                         Không có bài viết nào.
                       </TableCell>
                     </TableRow>

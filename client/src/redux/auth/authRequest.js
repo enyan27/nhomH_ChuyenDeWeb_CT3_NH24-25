@@ -10,6 +10,7 @@ export const loginUser = createAsyncThunk(
     const { reset, setError, navigate } = { ...others };
     try {
       const res = await axios.post("/auth/login", userData);
+      localStorage.setItem("role", res.data?.role);
       reset({ email: "", password: "" });
       Cookies.set("tokens", res.data?.token, {
         expires: 30,
