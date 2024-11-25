@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -11,6 +11,7 @@ import Input from "components/form/Input";
 import ErrorMessage from "components/form/ErrorMessage";
 import ButtonGradient from "components/button/ButtonGradient";
 import { loginUser } from "redux/auth/authRequest";
+import Cookies from "js-cookie";
 
 const schema = yup.object({
   email: yup
@@ -24,7 +25,19 @@ const LoginPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     document.title = "Twitter | Login";
-  }, []);
+
+    const role = localStorage.getItem("role");
+    const isBan = localStorage.getItem("isBan");
+    
+    if (role && isBan === "true") {
+      alert("Tài khoản của bạn đã bị khóa.");
+      localStorage.removeItem("role");
+      localStorage.removeItem("isBan");
+      Cookies.remove("tokens");
+      navigate("/login");
+    }
+  }, [navigate]);
+
   const {
     handleSubmit,
     control,
@@ -48,24 +61,29 @@ const LoginPage = () => {
       })
     ).then((res) => {
       if (res?.data) {
-        const { role } = res.data;
-  
-        console.log("Role từ backend:", role);
-  
-        localStorage.setItem("role", role);
-  
-        if (role == 1) {
-          navigate("/admin");
+        const { role, isBan } = res.data;
+
+        if (isBan === true) {
+          alert("Tài khoản của bạn đã bị khóa.");
+          
+          localStorage.removeItem("role");
+          localStorage.removeItem("isBan");
+          Cookies.remove("tokens");
         } else {
-          navigate("/home");
+          localStorage.setItem("role", role);
+          localStorage.setItem("isBan", isBan.toString());
+
+          if (role === 1) {
+            navigate("/admin");
+          } else {
+            navigate("/home");
+          }
         }
       } else {
         console.error("Không nhận được role từ backend");
       }
     });
   };
-  
-  
   return (
     <Authentication heading="Log in">
       <form
@@ -127,8 +145,6 @@ const LoginPage = () => {
               Sign up
             </Link>
           </p>
-
-
         </div>
       </form>
     </Authentication>

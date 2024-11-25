@@ -18,6 +18,10 @@ module.exports = function verifyToken(req, res, next) {
 
     if (!req.username) return res.status(404).json("User not found.");
 
+    if (req.username.isBan) {  // Kiểm tra xem tài khoản có bị khóa không
+      return res.status(403).json({ message: "Tài khoản của bạn đã bị khóa" });
+    }
+
     next();
   });
 };

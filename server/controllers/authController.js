@@ -39,7 +39,7 @@ const handleLogin = asyncHandler(async (req, res) => {
       const result = await bcrypt.compare(req.body.password, username.password);
 
       if (result) {
-        const { _id, email, firstName, lastName, avatar, role } = username._doc;
+        const { _id, email, firstName, lastName, avatar, role, isBan } = username._doc;
 
         const token = generateToken({ _id });
 
@@ -58,6 +58,7 @@ const handleLogin = asyncHandler(async (req, res) => {
           avatar,
           token,
           role,
+          isBan,
         });        
       } else {
         res.status(400).json({ message: "Sai mật khẩu" });

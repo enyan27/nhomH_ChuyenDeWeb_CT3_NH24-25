@@ -28,6 +28,6 @@ router.put(
 );
 router.delete("/image/:id", verifyToken, handleDeleteImage);
 
-router.patch("/:id/status", verifyToken, verifyAdmin, handleAccountStatusChange);
+router.patch("/:id/status", verifyToken, handleAccountStatusChange);
 
 module.exports = router;

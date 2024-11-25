@@ -67,8 +67,6 @@ const User = () => {
     }
   };
 
-
-
   return (
     <div className="admin-layout">
       <Sidebar />

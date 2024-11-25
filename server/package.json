@@ -14,6 +14,9 @@
   "author": "truongdat2325@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "@mui/material": "^6.1.8",
     "bcrypt": "^5.1.0",
     "cloudinary": "^1.33.0",
     "cookie-parser": "^1.4.6",

@@ -6,10 +6,20 @@ import { toast } from "react-toastify";
 
 export const loginUser = createAsyncThunk(
   "auth/login",
-  async ({ userData, ...others }) => {
+  async ({ userData, ...others }, {rejectWithValue}) => {
     const { reset, setError, navigate } = { ...others };
     try {
       const res = await axios.post("/auth/login", userData);
+
+      console.log(res.data?.isBan);
+      
+      if (res.data?.isBan === true) {
+        alert("Tài khoản của bạn đã bị khóa.");
+        localStorage.removeItem("role");
+        Cookies.remove("tokens");
+        return rejectWithValue({ message: "Your account has been banned" });
+      }
+
       localStorage.setItem("role", res.data?.role);
       reset({ email: "", password: "" });
       Cookies.set("tokens", res.data?.token, {
