@@ -50,6 +50,11 @@ const CommentItem = ({ comment, isAuthor = false }) => {
       setReplyContent("");
     }
   };
+  const handleCancelEdit = () => {
+    setEditContent(content); // Quay về nội dung gốc của bình luận
+    setIsEditing(false); // Đóng chế độ chỉnh sửa
+  };
+
 
   useEffect(() => {
     socket.on("commentUpdated", ({ commentId, content, updatedAt }) => {
@@ -103,14 +108,14 @@ const CommentItem = ({ comment, isAuthor = false }) => {
                 <Button
                   onClick={handleEditComment}
                   variant="contained"
-                  disabled={!editContent.trim()}
-                  className={`w-[80px] h-[32px] bg-primary text-white font-medium rounded-[20px] py-[4px] px-3 text-xs transition-all ${!editContent.trim() ? "opacity-30 cursor-not-allowed" : ""
+                  disabled={!editContent.trim() || editContent === content} // Chặn khi nội dung không hợp lệ hoặc không thay đổi
+                  className={`w-[80px] h-[32px] bg-primary text-white font-medium rounded-[20px] py-[4px] px-3 text-xs transition-all ${!editContent.trim() || editContent === content ? "opacity-30 cursor-not-allowed" : ""
                     }`}
                 >
                   Save
                 </Button>
                 <Button
-                  onClick={() => setIsEditing(false)}
+                  onClick={handleCancelEdit}
                   variant="outlined"
                   className="w-[80px] h-[32px] border-gray-400 text-gray-600 font-medium rounded-[20px] py-[4px] px-3 text-xs hover:bg-gray-100 transition-all"
                 >
@@ -122,7 +127,6 @@ const CommentItem = ({ comment, isAuthor = false }) => {
                 {parse(editContent)}
               </h5>
             )}
-
             {!isEditing && userID?._id === currentUser?._id && (
               <div className="flex items-center gap-x-2">
                 <Tooltip onClick={() => setIsEditing(true)}>
