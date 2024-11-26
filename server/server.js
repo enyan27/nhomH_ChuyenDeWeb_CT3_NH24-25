@@ -19,6 +19,10 @@ const io = socketIO(server, {
   },
 });
 
+app.get('/', (req, res) => {
+  res.send('Hello from the Node.js server!')
+})
+
 /* Configuration */
 app.use(cors({ origin: [process.env.URL_CLIENT] }));
 // app.use("/public", express.static(path.join(__dirname, "./public")));
