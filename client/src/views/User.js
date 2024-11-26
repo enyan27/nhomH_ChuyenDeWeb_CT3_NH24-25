@@ -54,10 +54,17 @@ const User = () => {
   };
 
   const handleRoleChange = async (userId, role) => {
+    const token = Cookies.get("tokens");
     try {
-      const response = await axios.patch(`/users/${userId}`, {
-        role: parseInt(role, 10),
-      });
+      const response = await axios.patch(
+        `/users/${userId}/role`,
+        { role: parseInt(role, 10) },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status === 200) {
         updateUser(userId, { role: parseInt(role, 10) });
         alert("Cập nhật quyền thành công!");

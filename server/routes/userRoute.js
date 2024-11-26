@@ -7,7 +7,8 @@ const {
   handleDeleteImage,
   handleSearchHistory,
   handleRemoveSearch,
-  deleteUser
+  deleteUser,
+  handleRoleChange,
 } = require("../controllers/userController");
 const { handleAccountStatusChange } = require("../controllers/userController");
 
@@ -30,6 +31,8 @@ router.put(
 router.delete("/image/:id", verifyToken, handleDeleteImage);
 
 router.patch("/:id/status", verifyToken, handleAccountStatusChange);
+
+router.patch("/:id/role", verifyToken, handleRoleChange);
 
 router.delete("/delete/:id", deleteUser);
 

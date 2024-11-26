@@ -262,17 +262,47 @@ const handleUpdateInfo = asyncHandler(async (req, res) => {
   }
 });
 
-const deleteUser = asyncHandler(async (req, res) => {
-  const userId = req.params.id;
-
+const handleRoleChange = asyncHandler(async (req, res) => {
   try {
-    // Tìm người dùng theo ID
-    const user = await UserModel.findById(userId); // Đảm bảo gọi đúng model "User"
+    const { id } = req.params;
+    const { role } = req.body;
+    if (req.username.role !== 1) {
+      return res.status(403).json({ message: "Bạn không có quyền thay đổi role của người dùng." });
+    }
+
+    const user = await UserModel.findById(id);
     if (!user) {
       return res.status(404).json({ message: "Người dùng không tồn tại." });
     }
 
-    // Thực hiện xóa người dùng
+    if (role !== 0 && role !== 1) {
+      return res.status(400).json({ message: "Role không hợp lệ. Role chỉ được phép là 0 (User) hoặc 1 (Admin)." });
+    }
+    user.role = role;
+    await user.save();
+
+    res.json({
+      message: "Cập nhật role người dùng thành công.",
+      user: {
+        id: user._id,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Lỗi server:", error);
+    res.status(500).json({ message: "Lỗi server khi thay đổi role.", error });
+  }
+});
+
+const deleteUser = asyncHandler(async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại." });
+    }
+
     await UserModel.findByIdAndDelete(userId);
 
     res.status(200).json({ message: "Xóa người dùng thành công." });
@@ -291,4 +321,5 @@ module.exports = {
   handleRemoveSearch,
   handleAccountStatusChange,
   deleteUser,
+  handleRoleChange,
 };
