@@ -1,7 +1,7 @@
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const apiUrl = process.env.URL_SERVER || "http://localhost:8080"
+const apiUrl = process.env.REACT_APP_URL_SERVER || "http://localhost:8080";
 
 export const socket = io(apiUrl);
 
