@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import useToggle from "hooks/useToggle";
 import PostContent from "./parts/PostContent";
 import PostImage from "./parts/PostImage";
@@ -22,11 +23,12 @@ import { Snackbar } from "@mui/material";
 import useSnackbarInfo from "hooks/useSnackbarInfo";
 import AlertDialog from "components/alert/AlertDialog";
 import PostVideo from "./parts/PostVideo";
-import RepeatIcon from '@mui/icons-material/Repeat';
-import PostAddNew from './PostAddNew';
-import PostItemRetweet from './PostItemRetweet';
+import RepeatIcon from "@mui/icons-material/Repeat";
+import PostAddNew from "./PostAddNew";
+import PostItemRetweet from "./PostItemRetweet";
 
 const PostItem = ({ postInfo }) => {
+  const navigate = useNavigate(); // Sử dụng useNavigate
   const { currentUser } = useSelector((state) => state.auth.login);
   const {
     _id,
@@ -44,6 +46,7 @@ const PostItem = ({ postInfo }) => {
     createdAt,
     retweetPost,
   } = postInfo;
+
   const { action, handleClose, stateOpen } = useSnackbarInfo();
   const [textAlert, setTextAlert] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -56,12 +59,12 @@ const PostItem = ({ postInfo }) => {
   const [retweetActive, setRetweetActive] = useState(postInfo.isRetweeted);
   const [countRetweet, setCountRetweet] = useState(postInfo.retweetCount);
 
+  const dispatch = useDispatch();
+
   const handleOpenModalPost = (type = "") => {
     setShowModal(true);
     setPostType(type);
   };
-
-  const dispatch = useDispatch();
 
   const handleLiked = async () => {
     try {
@@ -118,14 +121,21 @@ const PostItem = ({ postInfo }) => {
     }
   };
 
+  // Hàm điều hướng, ngừng hành động nếu đang mở modal
+  const handleNavigateToDetail = (e) => {
+    // Nếu có modal open thì không chuyển trang
+    if (e.target.closest(".interactive-btn") || showModal) return;
+    navigate(`/post/${_id}`);
+  };
+
   if (type === "retweet") {
     return (
       <PostItemRetweet
         retweetPost={retweetPost}
         originalPost={postInfo}
-        onDeletePost={() => handleDeletePost()}
-        onToggleComment={() => handleModeComment()}
-        onLikePost={() => handleLiked()}
+        onDeletePost={handleDeletePost}
+        onToggleComment={handleModeComment}
+        onLikePost={handleLiked}
         isLiked={like}
         likeCount={countLike}
       />
@@ -134,12 +144,15 @@ const PostItem = ({ postInfo }) => {
 
   return (
     <>
-      <div className="flex flex-col border-b border-graySoft dark:border-gray-700 break-all">
+      <div
+        className="flex flex-col border-b border-graySoft dark:border-gray-700 break-all cursor-pointer"
+        onClick={handleNavigateToDetail}
+      >
         <div className="px-4">
           <div className="flex items-start justify-between mt-5 mb-3">
-            <PostMeta timer={renderTime(createdAt)} author={authorID}></PostMeta>
+            <PostMeta timer={renderTime(createdAt)} author={authorID} />
             <div className="flex items-center gap-x-1">
-              <PostSaved isSaved={saved} postID={_id}></PostSaved>
+              <PostSaved isSaved={saved} postID={_id} />
               {currentUser?._id === authorID._id && (
                 <MenuNav>
                   <MenuNavItem handleExtra={handleModeComment}>
@@ -158,26 +171,25 @@ const PostItem = ({ postInfo }) => {
             <>
               <PostContent>{content}</PostContent>
               {type === "image" && (
-                <PostImage src={listImg[0]} listImg={listImg}></PostImage>
+                <PostImage src={listImg[0]} listImg={listImg} />
               )}
-              {type === "video" && <PostVideo src={linkVideo}></PostVideo>}
+              {type === "video" && <PostVideo src={linkVideo} />}
             </>
           )}
-          {/* Nút trạng thái bài viết bình thường */}
-          <div className="py-3 ">
+          <div className="py-3">
             <div className="flex items-center gap-x-10 justify-between px-16">
               <PostStatus
+                className="interactive-btn"
                 hoverColor="group-hover:bg-primaryBlue group-hover:text-primaryBlue"
                 textColor="group-hover:text-primaryBlue"
                 quantity={commentCount}
-                className={!modeComment ? "pointer-events-none opacity-60" : ""}
                 title="Comment"
                 onClick={setModalComment}
               >
                 {modeComment ? (
-                  <ChatBubbleOutlineOutlinedIcon className="text-xl"></ChatBubbleOutlineOutlinedIcon>
+                  <ChatBubbleOutlineOutlinedIcon className="text-xl" />
                 ) : (
-                  <CommentsDisabledIcon className="text-xl"></CommentsDisabledIcon>
+                  <CommentsDisabledIcon className="text-xl" />
                 )}
               </PostStatus>
               {/* Retweet */}
@@ -187,35 +199,30 @@ const PostItem = ({ postInfo }) => {
                   type={postType}
                   postToRetweet={postInfo}
                   onRetweetSuccess={handleRetweetSuccess}
-                ></PostAddNew>
+                />
               )}
-
               <PostStatus
+                className="interactive-btn"
                 hoverColor="group-hover:bg-retweetColor group-hover:text-retweetColor"
-                textColor={retweetActive ? "text-retweetColor" : "group-hover:text-retweetColor"}
+                textColor={retweetActive ? "text-retweetColor" : ""}
                 quantity={countRetweet}
                 title={retweetActive ? "You've been retweeted" : "Retweet"}
                 onClick={!retweetActive ? () => handleOpenModalPost("retweet") : undefined}
-                className={retweetActive ? "cursor-not-allowed" : ""}
               >
-                <RepeatIcon className={`text-xl ${retweetActive ? "text-retweetColor" : ""}`}></RepeatIcon>
+                <RepeatIcon className="text-xl" />
               </PostStatus>
-
               <PostStatus
+                className="interactive-btn"
                 hoverColor="group-hover:bg-heartColor group-hover:text-heartColor"
+                textColor={like ? "text-heartColor" : ""}
                 quantity={countLike}
-                textColor={
-                  like
-                    ? "text-heartColor"
-                    : "group-hover:text-heartColor transition-colors"
-                }
-                onClick={handleLiked}
                 title={like ? "Unlike" : "Like"}
+                onClick={handleLiked}
               >
                 {like ? (
-                  <FavoriteIcon className="text-xl text-heartColor heart-active"></FavoriteIcon>
+                  <FavoriteIcon className="text-xl text-heartColor" />
                 ) : (
-                  <FavoriteBorderIcon className="text-xl heart-active"></FavoriteBorderIcon>
+                  <FavoriteBorderIcon className="text-xl" />
                 )}
               </PostStatus>
             </div>
@@ -227,7 +234,7 @@ const PostItem = ({ postInfo }) => {
           modalComment={modalComment}
           handleHideModal={setModalComment}
           post={postInfo}
-        ></CommentFeature>
+        />
       )}
       <Snackbar
         open={open}
@@ -242,7 +249,7 @@ const PostItem = ({ postInfo }) => {
         handleExtra={handleDeletePost}
         textConfirm="You want to delete this post?"
         textSupport="This post will be permanently lost if you confirm"
-      ></AlertDialog>
+      />
     </>
   );
 };
