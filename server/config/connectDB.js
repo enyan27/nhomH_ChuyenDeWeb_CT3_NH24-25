@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
 mongoose
-  .connect(`mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.oir6z.mongodb.net/twitter-db`, {
+  .connect(process.env.DB_URI, {
     // .connect("mongodb://localhost:27017/twitter-db", {
     useNewUrlParser: true,
     useUnifiedTopology: true
